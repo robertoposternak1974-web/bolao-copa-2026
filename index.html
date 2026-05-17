@@ -1,0 +1,2975 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TrocaFig 2026 ⚽</title>
+
+<!-- PWA — Adicionar à Tela Inicial -->
+<meta name="application-name" content="TrocaFig 2026">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TrocaFig">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#00C853">
+<meta name="description" content="Gerencie suas figurinhas da Copa do Mundo 2026 e encontre trocas em tempo real!">
+
+<!-- Ícones para iOS -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23080C0A'/><text y='320' x='256' text-anchor='middle' font-size='300' font-family='Arial'>⚽</text><text y='440' x='256' text-anchor='middle' font-size='72' font-family='Arial Black' font-weight='900' fill='%2300C853'>TROCA</text><text y='440' x='340' text-anchor='middle' font-size='72' font-family='Arial Black' font-weight='900' fill='white'>FIG</text></svg>">
+
+<!-- Manifest PWA inline -->
+<link rel="manifest" href="data:application/json,{
+  &quot;name&quot;: &quot;TrocaFig 2026&quot;,
+  &quot;short_name&quot;: &quot;TrocaFig&quot;,
+  &quot;description&quot;: &quot;Gerencie suas figurinhas da Copa do Mundo 2026&quot;,
+  &quot;start_url&quot;: &quot;/&quot;,
+  &quot;display&quot;: &quot;standalone&quot;,
+  &quot;background_color&quot;: &quot;%23080C0A&quot;,
+  &quot;theme_color&quot;: &quot;%2300C853&quot;,
+  &quot;orientation&quot;: &quot;portrait&quot;,
+  &quot;icons&quot;: [{
+    &quot;src&quot;: &quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23080C0A'/><text y='320' x='256' text-anchor='middle' font-size='300'>⚽</text></svg>&quot;,
+    &quot;sizes&quot;: &quot;512x512&quot;,
+    &quot;type&quot;: &quot;image/svg+xml&quot;,
+    &quot;purpose&quot;: &quot;any maskable&quot;
+  }]
+}">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:      #00C853;
+    --green-dark: #007A32;
+    --green-dim:  #00391A;
+    --green-glow: rgba(0,200,83,0.22);
+    --bg:         #080C0A;
+    --surface:    #0E1612;
+    --surface2:   #162219;
+    --surface3:   #1C2C22;
+    --white:      #FFFFFF;
+    --text:       #E6F0EB;
+    --muted:      #7A9986;
+    --divider:    rgba(0,200,83,0.12);
+    --red:        #FF3D3D;
+    --blue:       #4DA3FF;
+    --gold:       #FFD600;
+    --radius:     13px;
+    --radius-sm:  8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 430px; margin: 0 auto; overflow-x: hidden; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,200,83,0.025) 0px, rgba(0,200,83,0.025) 40px, transparent 40px, transparent 80px),
+      radial-gradient(ellipse 100% 55% at 50% 0%, rgba(0,200,83,0.14) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 30% at 100% 100%, rgba(0,58,26,0.4) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+  header { position: sticky; top: 0; z-index: 100; background: rgba(8,12,10,0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--divider); padding: 13px 18px 10px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; color: var(--white); }
+  .logo .lg { color: var(--green); }
+  .logo .ly { font-size: 14px; color: var(--muted); letter-spacing: 1px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-dim); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: var(--green); cursor: pointer; }
+  .stats-bar { display: flex; margin-top: 11px; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--divider); overflow: hidden; }
+  .stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 7px 4px; }
+  .stat-item + .stat-item { border-left: 1px solid var(--divider); }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; color: var(--green); }
+  .stat-label { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 1px; }
+  .stat-divider { display: none; }
+  .tabs { display: flex; background: var(--surface); border-radius: var(--radius); padding: 4px; margin: 13px 16px 0; border: 1px solid var(--divider); position: relative; z-index: 1; }
+  .tab { flex: 1; padding: 9px 4px; border: none; background: none; border-radius: var(--radius-sm); color: var(--muted); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+  .tab.active { background: var(--green); color: #000; box-shadow: 0 2px 16px var(--green-glow); font-weight: 800; }
+  .content { padding: 14px 16px 90px; position: relative; z-index: 1; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 2px; color: var(--white); margin-bottom: 11px; display: flex; align-items: center; gap: 8px; }
+  .search-wrap { position: relative; margin-bottom: 13px; }
+  .search-input { width: 100%; padding: 11px 16px 11px 40px; background: var(--surface2); border: 1px solid var(--divider); border-radius: var(--radius); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; outline: none; transition: border 0.18s; }
+  .search-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,200,83,0.1); }
+  .search-input::placeholder { color: var(--muted); }
+  .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--muted); }
+  .selecao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .selecao-card { background: var(--surface); border: 1px solid var(--divider); border-radius: var(--radius); padding: 13px 12px 11px; cursor: pointer; transition: all 0.18s; position: relative; overflow: hidden; }
+  .selecao-card:active { transform: scale(0.97); }
+  .selecao-card:hover, .selecao-card.selected { border-color: var(--green); background: var(--surface2); box-shadow: 0 0 0 1px var(--green), 0 4px 20px var(--green-glow); }
+  .selecao-card.selected::after { content: '✓'; position: absolute; top: 8px; right: 9px; font-size: 10px; font-weight: 800; background: var(--green); color: #000; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .selecao-flag { font-size: 28px; margin-bottom: 7px; line-height: 1; }
+  .selecao-name { font-size: 13px; font-weight: 700; color: var(--white); line-height: 1.2; }
+  .selecao-count { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+  .selecao-progress { height: 3px; background: rgba(255,255,255,0.07); border-radius: 10px; margin-top: 9px; overflow: hidden; }
+  .selecao-progress-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.4s; }
+  .fig-list { display: flex; flex-direction: column; gap: 8px; }
+  .fig-card { background: var(--surface); border: 1px solid var(--divider); border-radius: var(--radius); padding: 12px 13px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.18s; }
+  .fig-card:hover { border-color: var(--green); background: var(--surface2); }
+  .fig-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--green); min-width: 36px; text-align: center; }
+  .fig-thumb { width: 42px; height: 54px; border-radius: var(--radius-sm); background: var(--surface2); border: 1px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .fig-info { flex: 1; }
+  .fig-name { font-size: 14px; font-weight: 700; color: var(--white); }
+  .fig-selecao { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+  .fig-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .badge-repetida { background: rgba(77,163,255,0.14); color: var(--blue); border: 1px solid rgba(77,163,255,0.25); }
+  .badge-faltante { background: rgba(255,61,61,0.12); color: var(--red); border: 1px solid rgba(255,61,61,0.22); }
+  .badge-ok { background: rgba(0,200,83,0.13); color: var(--green); border: 1px solid rgba(0,200,83,0.25); }
+  .badge-trocada { background: rgba(255,140,0,0.12); color: #FF8C00; border: 1px solid rgba(255,140,0,0.25); }
+  .chat-list { display: flex; flex-direction: column; gap: 8px; }
+  .chat-item { background: var(--surface); border: 1px solid var(--divider); border-radius: var(--radius); padding: 12px 13px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.18s; }
+  .chat-item:hover { border-color: var(--green); background: var(--surface2); }
+  .chat-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .chat-info { flex: 1; min-width: 0; }
+  .chat-name { font-size: 14px; font-weight: 700; color: var(--white); }
+  .chat-preview { font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .chat-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .chat-time { font-size: 10px; color: var(--muted); font-weight: 500; }
+  .chat-unread { background: var(--green); color: #000; font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .chat-window { display: none; flex-direction: column; height: calc(100vh - 130px); position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--bg); z-index: 200; border-top: 2px solid var(--green); }
+  .chat-window.open { display: flex; }
+  .chat-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--divider); }
+  .chat-back { background: none; border: none; color: var(--green); font-size: 22px; cursor: pointer; }
+  .chat-user-info { flex: 1; }
+  .chat-user-name { font-size: 15px; font-weight: 700; color: var(--white); }
+  .chat-user-sub { font-size: 11px; color: var(--green); font-weight: 600; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 9px; }
+  .msg { max-width: 78%; padding: 10px 13px; border-radius: 16px; font-size: 14px; line-height: 1.5; font-weight: 500; }
+  .msg.received { background: var(--surface2); border: 1px solid var(--divider); border-bottom-left-radius: 4px; align-self: flex-start; color: var(--text); }
+  .msg.sent { background: var(--green); color: #000; font-weight: 700; border-bottom-right-radius: 4px; align-self: flex-end; box-shadow: 0 2px 12px var(--green-glow); }
+  .msg-time { font-size: 10px; opacity: 0.55; margin-top: 4px; text-align: right; }
+  .chat-input-wrap { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface); border-top: 1px solid var(--divider); }
+  .chat-input { flex: 1; background: var(--surface2); border: 1px solid var(--divider); border-radius: 22px; padding: 10px 16px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; outline: none; transition: border 0.18s; }
+  .chat-input:focus { border-color: var(--green); }
+  .chat-input::placeholder { color: var(--muted); }
+  .chat-send { width: 40px; height: 40px; border-radius: 50%; background: var(--green); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; box-shadow: 0 2px 10px var(--green-glow); }
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: rgba(8,12,10,0.97); backdrop-filter: blur(16px); border-top: 1px solid var(--divider); display: flex; z-index: 150; padding: 8px 0 14px; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; cursor: pointer; padding: 5px 4px; transition: color 0.18s; text-transform: uppercase; letter-spacing: 0.5px; }
+  .nav-btn .icon { font-size: 20px; }
+  .nav-btn.active { color: var(--green); }
+  .fab { position: fixed; bottom: 74px; right: calc(50% - 200px); width: 52px; height: 52px; border-radius: 50%; background: var(--green); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #000; font-weight: 900; box-shadow: 0 4px 24px var(--green-glow), 0 0 0 3px rgba(0,200,83,0.15); z-index: 140; transition: transform 0.18s; }
+  .fab:active { transform: scale(0.92); }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 300; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 20px 20px 0 0; border: 1px solid var(--divider); border-bottom: none; padding: 22px 18px 34px; width: 100%; max-width: 430px; animation: slideUp 0.26s cubic-bezier(.32,1.2,.55,1); }
+  @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--white); margin-bottom: 18px; }
+  .form-group { margin-bottom: 13px; }
+  .form-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; display: block; }
+  .form-input, .form-select { width: 100%; padding: 11px 14px; background: var(--surface2); border: 1px solid var(--divider); border-radius: var(--radius-sm); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; outline: none; transition: border 0.18s; }
+  .form-input:focus, .form-select:focus { border-color: var(--green); }
+  .form-select option { background: var(--surface); }
+  .btn-primary { width: 100%; padding: 14px; background: var(--green); border: none; border-radius: var(--radius); color: #000; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 6px; }
+  .btn-ghost { width: 100%; padding: 12px; background: none; border: 1px solid var(--divider); border-radius: var(--radius); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+  .chip-row { display: flex; gap: 7px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 3px; }
+  .chip-row::-webkit-scrollbar { display: none; }
+  .chip { padding: 6px 13px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--divider); background: var(--surface); color: var(--muted); font-family: 'Inter', sans-serif; transition: all 0.18s; }
+  .chip.active { background: var(--green); border-color: var(--green); color: #000; }
+  .progress-card { background: var(--surface); border: 1px solid var(--divider); border-radius: var(--radius); padding: 15px; margin-bottom: 14px; }
+  .progress-title { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; color: var(--white); margin-bottom: 10px; }
+  .progress-bar { height: 8px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; margin-bottom: 7px; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.5s; box-shadow: 0 0 8px var(--green-glow); }
+  .progress-label { font-size: 12px; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; }
+  .login-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 999; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; }
+  .login-screen.active { display: flex; }
+  .login-ball { font-size: 60px; margin-bottom: 10px; animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 46px; letter-spacing: 4px; color: var(--white); margin-bottom: 4px; text-align: center; }
+  .login-logo .lf { color: var(--green); }
+  .login-sub { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 32px; text-align: center; }
+  .login-card { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--divider); border-radius: 18px; padding: 22px 20px; box-shadow: 0 8px 48px rgba(0,200,83,0.1); }
+  .login-tabs { display: flex; background: var(--bg); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 20px; }
+  .login-tab { flex: 1; padding: 9px; border: none; background: none; border-radius: 6px; color: var(--muted); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.18s; }
+  .login-tab.active { background: var(--green); color: #000; }
+  .login-form-group { margin-bottom: 13px; }
+  .login-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; display: block; }
+  .login-input { width: 100%; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--divider); border-radius: var(--radius-sm); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; outline: none; transition: border 0.18s; }
+  .login-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,200,83,0.1); }
+  .login-input::placeholder { color: var(--muted); }
+  .login-btn { width: 100%; padding: 14px; background: var(--green); border: none; border-radius: var(--radius); color: #000; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 20px var(--green-glow); }
+  .login-error { background: rgba(255,61,61,0.1); border: 1px solid rgba(255,61,61,0.25); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 12px; display: none; }
+  .login-error.show { display: block; }
+  .logout-btn { background: none; border: none; color: var(--muted); font-size: 19px; cursor: pointer; padding: 4px; }
+  .logout-btn:hover { color: var(--red); }
+  .toast { position: fixed; top: -70px; left: 50%; transform: translateX(-50%); background: var(--green); color: #000; padding: 11px 22px; border-radius: 30px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 13px; z-index: 500; transition: top 0.32s cubic-bezier(.32,1.2,.55,1); white-space: nowrap; box-shadow: 0 4px 20px var(--green-glow); }
+  .toast.show { top: 18px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .empty-state { text-align: center; padding: 44px 20px; color: var(--muted); }
+  .empty-icon { font-size: 46px; margin-bottom: 12px; }
+  .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; color: var(--text); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; line-height: 1.6; font-weight: 500; }
+
+  /* ── PWA BANNER ─────────────────────────────── */
+  .pwa-banner {
+    display: none;
+    position: fixed; bottom: 74px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 32px); max-width: 398px;
+    background: var(--surface2); border: 1px solid var(--green);
+    border-radius: var(--radius); padding: 12px 14px;
+    z-index: 130; gap: 12px; align-items: center;
+    box-shadow: 0 4px 24px rgba(0,200,83,0.2);
+    animation: slideUp 0.3s ease;
+  }
+  .pwa-banner.show { display: flex; }
+  .pwa-banner-icon { font-size: 32px; flex-shrink: 0; }
+  .pwa-banner-info { flex: 1; }
+  .pwa-banner-title { font-size: 13px; font-weight: 800; color: var(--white); }
+  .pwa-banner-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+  .pwa-banner-btn {
+    background: var(--green); border: none; border-radius: 8px;
+    color: #000; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 800;
+    padding: 8px 12px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  }
+  .pwa-banner-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 18px; cursor: pointer; padding: 2px; flex-shrink: 0;
+  }
+  .tutorial-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.92);
+    flex-direction: column; align-items: center; justify-content: flex-end;
+    padding: 0;
+  }
+  .tutorial-overlay.active { display: flex; }
+
+  .tutorial-card {
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    border: 1px solid var(--divider);
+    border-bottom: none;
+    width: 100%; max-width: 430px;
+    padding: 28px 24px 36px;
+    animation: slideUp 0.3s cubic-bezier(.32,1.2,.55,1);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .tutorial-step { display: none; }
+  .tutorial-step.active { display: block; }
+
+  .tutorial-icon { font-size: 56px; text-align: center; margin-bottom: 14px; line-height: 1; }
+  .tutorial-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px;
+    color: var(--white); text-align: center; margin-bottom: 10px;
+  }
+  .tutorial-title span { color: var(--green); }
+  .tutorial-text { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 500; text-align: center; margin-bottom: 20px; }
+
+  .tutorial-demo {
+    background: var(--surface2); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 20px; border: 1px solid var(--divider);
+  }
+  .tutorial-demo-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0; border-bottom: 1px solid var(--divider);
+  }
+  .tutorial-demo-row:last-child { border-bottom: none; }
+  .tutorial-demo-icon { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+  .tutorial-demo-info { flex: 1; }
+  .tutorial-demo-label { font-size: 13px; font-weight: 700; color: var(--white); }
+  .tutorial-demo-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .tutorial-dots {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;
+  }
+  .tutorial-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--surface3); transition: all 0.2s;
+  }
+  .tutorial-dot.active { background: var(--green); width: 24px; border-radius: 4px; }
+
+  .tutorial-btn {
+    width: 100%; padding: 15px; background: var(--green); border: none;
+    border-radius: var(--radius); color: #000; font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    box-shadow: 0 4px 20px var(--green-glow);
+  }
+  .tutorial-btn-skip {
+    width: 100%; padding: 12px; background: none; border: none;
+    color: var(--muted); font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px;
+  }
+
+  .disclaimer-box {
+    background: rgba(255,61,61,0.06); border: 1px solid rgba(255,61,61,0.2);
+    border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;
+  }
+  .disclaimer-box p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+  .disclaimer-box p:last-child { margin-bottom: 0; }
+  .disclaimer-box strong { color: #ff8a8a; }
+
+  .disclaimer-check {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .disclaimer-check input[type=checkbox] {
+    width: 20px; height: 20px; accent-color: var(--green);
+    flex-shrink: 0; margin-top: 2px; cursor: pointer;
+  }
+  .disclaimer-check label { font-size: 13px; color: var(--text); font-weight: 600; line-height: 1.5; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen active" id="login-screen">
+  <div class="login-ball">⚽</div>
+  <div class="login-logo">Troca<span class="lf">Fig</span></div>
+  <div class="login-sub">🏆 Copa do Mundo 2026 · EUA · México · Canadá</div>
+  <div class="login-card">
+    <div class="login-tabs">
+      <button class="login-tab active" id="ltab-entrar" onclick="switchLoginTab('entrar')">Entrar</button>
+      <button class="login-tab" id="ltab-cadastro" onclick="switchLoginTab('cadastro')">Criar Conta</button>
+    </div>
+
+    <div id="login-error" class="login-error"></div>
+
+    <!-- ENTRAR -->
+    <div id="form-entrar">
+      <div class="login-form-group">
+        <label class="login-label">E-mail</label>
+        <input type="email" class="login-input" id="login-user" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="login-form-group">
+        <label class="login-label">Senha</label>
+        <input type="password" class="login-input" id="login-pass" placeholder="Sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Entrar ⚽</button>
+      <div style="text-align:center;margin-top:12px;">
+        <a href="#" onclick="esqueciSenha();return false;" style="color:var(--green);font-size:13px;font-weight:600;text-decoration:none;">🔑 Esqueci minha senha</a>
+      </div>
+    </div>
+
+    <!-- CADASTRO -->
+    <div id="form-cadastro" style="display:none;">
+      <div class="login-form-group">
+        <label class="login-label">Nome completo</label>
+        <input type="text" class="login-input" id="cad-nome" placeholder="Ex: João Silva">
+      </div>
+      <div class="login-form-group">
+        <label class="login-label">E-mail</label>
+        <input type="email" class="login-input" id="cad-user" placeholder="seu@email.com">
+      </div>
+      <div class="login-form-group">
+        <label class="login-label">Senha</label>
+        <input type="password" class="login-input" id="cad-pass" placeholder="Crie uma senha">
+      </div>
+      <div class="login-form-group">
+        <label class="login-label">Confirmar senha</label>
+        <input type="password" class="login-input" id="cad-pass2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter')doCadastro()">
+      </div>
+      <button class="login-btn" onclick="doCadastro()">Criar conta 🏆</button>
+    </div>
+  </div>
+</div>
+
+<!-- TUTORIAL ONBOARDING -->
+<div class="tutorial-overlay" id="tutorial-overlay">
+  <div class="tutorial-card">
+
+    <!-- DOTS -->
+    <div class="tutorial-dots">
+      <div class="tutorial-dot active" id="dot-0"></div>
+      <div class="tutorial-dot" id="dot-1"></div>
+      <div class="tutorial-dot" id="dot-2"></div>
+      <div class="tutorial-dot" id="dot-3"></div>
+      <div class="tutorial-dot" id="dot-4"></div>
+      <div class="tutorial-dot" id="dot-5"></div>
+      <div class="tutorial-dot" id="dot-6"></div>
+    </div>
+
+    <!-- PASSO 0 — Boas-vindas + Disclaimer -->
+    <div class="tutorial-step active" id="step-0">
+      <div class="tutorial-icon">⚽🏆</div>
+      <div class="tutorial-title">Bem-vindo ao <span>TrocaFig</span> 2026!</div>
+      <div class="tutorial-text">O app para gerenciar suas figurinhas da Copa do Mundo 2026 e encontrar trocas com amigos e familiares.</div>
+
+      <div class="disclaimer-box">
+        <p><strong>⚠️ Aviso Legal — Leia antes de continuar</strong></p>
+        <p>Este é um aplicativo <strong>independente e não oficial</strong>, criado para uso pessoal entre amigos e familiares. <strong>Não tem qualquer vínculo</strong> com a FIFA, Panini, ou qualquer entidade oficial.</p>
+        <p>O uso deste app é de <strong>inteira responsabilidade do usuário</strong>. O criador do app não se responsabiliza por: negociações, trocas combinadas, dados pessoais inseridos, perdas de figurinhas, ou qualquer transação realizada entre usuários.</p>
+        <p>As imagens de jogadores exibidas são de domínio público (Wikimedia Commons). Os nomes dos jogadores são usados apenas para fins de identificação das figurinhas do álbum oficial.</p>
+        <p><strong>Ao continuar, você declara ter lido e concordado com estes termos.</strong></p>
+      </div>
+
+      <div class="disclaimer-check">
+        <input type="checkbox" id="check-disclaimer">
+        <label for="check-disclaimer">Li e concordo com os termos de uso. Entendo que este app é não oficial e uso por minha conta e risco.</label>
+      </div>
+
+      <button class="tutorial-btn" id="btn-step-0" onclick="tutorialNext(0)" style="opacity:0.4;pointer-events:none;">Concordo e Quero Continuar →</button>
+      <script>
+        document.getElementById('check-disclaimer').addEventListener('change', function() {
+          const btn = document.getElementById('btn-step-0');
+          btn.style.opacity = this.checked ? '1' : '0.4';
+          btn.style.pointerEvents = this.checked ? 'auto' : 'none';
+        });
+      </script>
+    </div>
+
+    <!-- PASSO 1 — O Álbum -->
+    <div class="tutorial-step" id="step-1">
+      <div class="tutorial-icon">📖</div>
+      <div class="tutorial-title">Seu <span>Álbum</span> Digital</div>
+      <div class="tutorial-text">O app tem todas as <strong>48 seleções</strong> e os <strong>994 figurinhas oficiais</strong> do álbum Panini Copa 2026. Toque numa seleção para ver as figurinhas.</div>
+
+      <div class="tutorial-demo">
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">🇧🇷</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque numa seleção</div>
+            <div class="tutorial-demo-sub">Para ver os 18 jogadores dela</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">📊</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Progresso no topo</div>
+            <div class="tutorial-demo-sub">Mostra quantas figurinhas você já tem</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">🔍</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Filtre por Grupo A–L</div>
+            <div class="tutorial-demo-sub">Ou busque o nome de uma seleção</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialNext(1)">Próximo →</button>
+      <button class="tutorial-btn-skip" onclick="tutorialPular()">Pular tutorial</button>
+    </div>
+
+    <!-- PASSO 2 — Como marcar figurinhas -->
+    <div class="tutorial-step" id="step-2">
+      <div class="tutorial-icon">👆</div>
+      <div class="tutorial-title">Como <span>Marcar</span> Figurinhas</div>
+      <div class="tutorial-text">Toque em qualquer jogador para mudar o status da figurinha. Cada toque avança para o próximo estado:</div>
+
+      <div class="tutorial-demo">
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">1️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">✅ Tenho — colada no álbum</div>
+            <div class="tutorial-demo-sub">Primeiro toque — figurinha colada</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">2️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">🔵 Repetida — para trocar</div>
+            <div class="tutorial-demo-sub">Segundo toque — aparece na Comunidade</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">3️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">🔴 Faltante — preciso dessa</div>
+            <div class="tutorial-demo-sub">Terceiro toque — fica cinza no álbum</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">4️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">🗑️ Remover — volta ao padrão</div>
+            <div class="tutorial-demo-sub">Quarto toque — apaga o registro</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialNext(2)">Próximo →</button>
+      <button class="tutorial-btn-skip" onclick="tutorialPular()">Pular tutorial</button>
+    </div>
+
+    <!-- PASSO 3 — Grupos / Comunidades -->
+    <div class="tutorial-step" id="step-3">
+      <div class="tutorial-icon">🏘️</div>
+      <div class="tutorial-title">Entre num <span>Grupo</span></div>
+      <div class="tutorial-text">Antes de buscar trocas, você precisa entrar numa <strong>Comunidade</strong>! Assim você troca figurinhas só com pessoas próximas a você.</div>
+
+      <div class="tutorial-demo">
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">➕</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Criar uma Comunidade</div>
+            <div class="tutorial-demo-sub">Crie um grupo para sua família, prédio, escola ou amigos. Você vira o administrador!</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">🔍</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Buscar uma Comunidade</div>
+            <div class="tutorial-demo-sub">Pesquise por nome ou cidade e solicite entrada. O admin aprova sua participação.</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">👑</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Painel do Admin</div>
+            <div class="tutorial-demo-sub">Se você criou o grupo, aprove ou recuse solicitações de novos membros na aba Admin.</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">👥</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Pode entrar em vários grupos!</div>
+            <div class="tutorial-demo-sub">Família, prédio, trabalho — participe de quantas comunidades quiser.</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialNext(3)">Próximo →</button>
+      <button class="tutorial-btn-skip" onclick="tutorialPular()">Pular tutorial</button>
+    </div>
+
+    <!-- PASSO 4 — Buscar Trocas -->
+    <div class="tutorial-step" id="step-4">
+      <div class="tutorial-icon">🔍</div>
+      <div class="tutorial-title">Encontre <span>Trocas</span></div>
+      <div class="tutorial-text">Na aba <strong>Buscar</strong> você vê as figurinhas repetidas dos membros das suas comunidades — só pessoas próximas a você!</div>
+
+      <div class="tutorial-demo">
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">🌎</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Aba Comunidade</div>
+            <div class="tutorial-demo-sub">Veja repetidas dos membros dos seus grupos. As que você precisa aparecem em verde!</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">👤</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Aba Minhas</div>
+            <div class="tutorial-demo-sub">Veja sua lista de repetidas e faltantes</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">💬</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque para trocar</div>
+            <div class="tutorial-demo-sub">Toque numa figurinha de alguém para abrir o chat direto com essa pessoa!</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialNext(4)">Próximo →</button>
+      <button class="tutorial-btn-skip" onclick="tutorialPular()">Pular tutorial</button>
+    </div>
+    <div class="tutorial-step" id="step-5">
+      <div class="tutorial-icon">💬</div>
+      <div class="tutorial-title">Chat em <span>Tempo Real</span></div>
+      <div class="tutorial-text">Converse diretamente com outros colecionadores para combinar suas trocas!</div>
+
+      <div class="tutorial-demo">
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">⚡</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Mensagens instantâneas</div>
+            <div class="tutorial-demo-sub">As mensagens chegam em tempo real, sem precisar atualizar</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">🤝</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Uma conversa por figurinha</div>
+            <div class="tutorial-demo-sub">Cada chat é identificado com o nome da figurinha sendo negociada</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">📍</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Combine o encontro</div>
+            <div class="tutorial-demo-sub">Use o chat para combinar onde e quando trocar as figurinhas pessoalmente</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">⚠️</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Atenção nas trocas</div>
+            <div class="tutorial-demo-sub">O app é só um facilitador — as trocas são combinadas entre as pessoas, sem garantias do app</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialNext(5)">Próximo →</button>
+      <button class="tutorial-btn-skip" onclick="tutorialPular()">Pular tutorial</button>
+    </div>
+
+    <!-- PASSO 6 — Instalar na tela inicial -->
+    <div class="tutorial-step" id="step-6">
+      <div class="tutorial-icon">📲</div>
+      <div class="tutorial-title">Instale no <span>Celular</span></div>
+      <div class="tutorial-text">Adicione o TrocaFig à sua tela inicial e acesse com um toque — igual a um app de verdade! <strong>Recomendamos fazer isso agora!</strong></div>
+
+      <div class="tutorial-demo" style="border-color:var(--green);background:rgba(0,200,83,0.05);">
+        <div style="text-align:center;padding:6px 0 10px;font-size:13px;font-weight:800;color:var(--green);">📱 iPhone / iPad (Safari)</div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">1️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque no ícone compartilhar</div>
+            <div class="tutorial-demo-sub">O botão □↑ na barra inferior do Safari</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">2️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque em "Adicionar à Tela de Início"</div>
+            <div class="tutorial-demo-sub">Role a lista de opções para encontrar</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">3️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Confirme o nome e toque em "Adicionar"</div>
+            <div class="tutorial-demo-sub">O ícone ⚽ aparecerá na sua tela inicial!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-demo" style="margin-top:10px;">
+        <div style="text-align:center;padding:6px 0 10px;font-size:13px;font-weight:800;color:var(--green);">🤖 Android (Chrome)</div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">1️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque nos 3 pontinhos ⋮ do Chrome</div>
+            <div class="tutorial-demo-sub">No canto superior direito do navegador</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">2️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Toque em "Adicionar à tela inicial"</div>
+            <div class="tutorial-demo-sub">Ou aceite o banner que aparecer automaticamente</div>
+          </div>
+        </div>
+        <div class="tutorial-demo-row">
+          <div class="tutorial-demo-icon">3️⃣</div>
+          <div class="tutorial-demo-info">
+            <div class="tutorial-demo-label">Confirme e pronto!</div>
+            <div class="tutorial-demo-sub">O ícone ⚽ aparecerá na sua tela inicial!</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="tutorial-btn" onclick="tutorialFinalizar()">🏆 Vamos Começar!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">Troca<span class="lg">Fig</span> <span class="ly">2026</span></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="avatar" id="header-avatar" onclick="abrirMenuPerfil()">?</div>
+      <button class="logout-btn" onclick="doLogout()" title="Sair">⏻</button>
+    </div>
+  </div>
+
+<!-- MENU PERFIL -->
+<div id="menu-perfil" style="display:none;position:absolute;top:60px;right:16px;background:var(--surface2);border:1px solid var(--divider);border-radius:var(--radius);min-width:200px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,0.4);overflow:hidden;">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--divider);">
+    <div id="menu-nome" style="font-size:14px;font-weight:700;color:var(--white);"></div>
+    <div id="menu-email" style="font-size:11px;color:var(--muted);margin-top:2px;"></div>
+  </div>
+  <button onclick="abrirTutorial();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    📖 Ver Tutorial
+  </button>
+  <button onclick="abrirRedefinirSenha();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    🔑 Redefinir Senha
+  </button>
+  <button onclick="instalarPWA();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    📲 Instalar no Celular
+  </button>
+  <button onclick="compartilharRepetidas();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    🔵 Compartilhar Repetidas
+  </button>
+  <button onclick="compartilharFaltantes();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    🔴 Compartilhar Faltantes
+  </button>
+  <button onclick="gerarTabelaAlbum();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    📊 Gerar Tabela do Álbum
+  </button>
+  <button onclick="confirmarZerarAlbum();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--divider);color:#FF8C00;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    🗑️ Zerar Álbum
+  </button>
+  <button onclick="doLogout();fecharMenuPerfil();" style="width:100%;padding:13px 16px;background:none;border:none;color:var(--red);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;">
+    ⏻ Sair
+  </button>
+</div>
+</header>
+
+<!-- MODAL CRIAR COMUNIDADE -->
+<div class="modal-overlay" id="modal-criar-com" onclick="if(event.target===this)fecharCriarComunidade()">
+  <div class="modal">
+    <div class="modal-title">🏘️ Criar Comunidade</div>
+    <div class="form-group">
+      <label class="form-label">Nome da Comunidade *</label>
+      <input type="text" class="form-input" id="com-nome" placeholder="Ex: Família Posternak, Cond. Vila Verde...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tipo *</label>
+      <select class="form-select" id="com-tipo">
+        <option value="familia">👨‍👩‍👧‍👦 Família</option>
+        <option value="condominio">🏢 Condomínio / Prédio</option>
+        <option value="escola">🏫 Escola / Colégio</option>
+        <option value="trabalho">💼 Trabalho / Empresa</option>
+        <option value="amigos">👥 Amigos</option>
+        <option value="clube">⚽ Clube / Associação</option>
+        <option value="outro">🏷️ Outro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cidade *</label>
+      <input type="text" class="form-input" id="com-cidade" placeholder="Ex: São Paulo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado *</label>
+      <select class="form-select" id="com-estado">
+        <option value="">Selecione...</option>
+        <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+        <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+        <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+        <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+        <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+        <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+        <option selected>SP</option><option>SE</option><option>TO</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição (opcional)</label>
+      <input type="text" class="form-input" id="com-desc" placeholder="Ex: Moradores do Bloco A">
+    </div>
+    <button class="btn-primary" onclick="criarComunidade()">✅ Criar Comunidade</button>
+    <button class="btn-ghost" onclick="fecharCriarComunidade()">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL VER COMUNIDADE (solicitar entrada) -->
+<div class="modal-overlay" id="modal-ver-com" onclick="if(event.target===this)fecharVerComunidade()">
+  <div class="modal">
+    <div id="ver-com-content"></div>
+    <button class="btn-primary" id="btn-solicitar-com" onclick="solicitarEntrada()">📩 Solicitar Entrada</button>
+    <button class="btn-ghost" onclick="fecharVerComunidade()">Fechar</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-zerar" onclick="if(event.target===this)fecharZerarAlbum()">
+  <div class="modal">
+    <div class="modal-title" style="color:#FF8C00;">⚠️ Zerar Álbum</div>
+    <p style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.6;font-weight:600;">Tem certeza que deseja apagar <strong>todas</strong> as suas figurinhas marcadas?</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Esta ação irá remover todas as figurinhas coladas, repetidas e faltantes do seu álbum. <strong style="color:var(--red);">Esta ação não pode ser desfeita!</strong></p>
+    <div style="background:rgba(255,61,61,0.08);border:1px solid rgba(255,61,61,0.25);border-radius:10px;padding:14px;margin-bottom:20px;">
+      <p style="font-size:13px;color:#ff8a8a;font-weight:700;text-align:center;">🗑️ Todo o progresso do seu álbum será perdido permanentemente.</p>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:6px;">Digite "ZERAR" para confirmar:</label>
+      <input type="text" id="input-zerar" class="form-input" placeholder="Digite ZERAR" oninput="validarZerar(this.value)">
+    </div>
+    <button class="btn-primary" id="btn-confirmar-zerar" style="background:#FF3D3D;opacity:0.4;pointer-events:none;" onclick="executarZerarAlbum()">🗑️ Sim, Zerar Meu Álbum</button>
+    <button class="btn-ghost" onclick="fecharZerarAlbum()">Cancelar — Manter meu álbum</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-senha" onclick="if(event.target===this)fecharRedefinirSenha()">
+  <div class="modal">
+    <div class="modal-title">🔑 Redefinir Senha</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Enviaremos um e-mail com um link seguro para você criar uma nova senha. Verifique também a caixa de spam.</p>
+    <div id="senha-email-info" style="background:var(--surface2);border:1px solid var(--divider);border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--text);font-weight:600;"></div>
+    <div id="senha-msg" style="display:none;background:rgba(0,200,83,0.1);border:1px solid var(--green);border-radius:8px;padding:12px;font-size:13px;color:var(--green);font-weight:600;margin-bottom:16px;"></div>
+    <button class="btn-primary" onclick="enviarRedefinicaoSenha()">📧 Enviar E-mail de Redefinição</button>
+    <button class="btn-ghost" onclick="fecharRedefinirSenha()">Cancelar</button>
+  </div>
+</div>
+  <div class="stats-bar">
+    <div class="stat-item" onclick="abrirListaStatus('coladas')" style="cursor:pointer;">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">Coladas</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item" onclick="abrirListaStatus('repetida')" style="cursor:pointer;">
+      <div class="stat-num" id="stat-rep" style="color:var(--blue)">0</div>
+      <div class="stat-label">Repetidas</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item" onclick="abrirListaStatus('faltante')" style="cursor:pointer;">
+      <div class="stat-num" id="stat-falt" style="color:var(--red)">0</div>
+      <div class="stat-label">Faltantes</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-pct" style="color:var(--green)">0%</div>
+      <div class="stat-label">Completo</div>
+    </div>
+  </div>
+</header>
+
+<!-- MODAL LISTA POR STATUS -->
+<div class="modal-overlay" id="modal-lista-status" onclick="if(event.target===this)fecharListaStatus()" style="align-items:flex-start;padding-top:60px;">
+  <div class="modal" style="border-radius:20px;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div class="modal-title" id="lista-status-title" style="margin:0;">Lista</div>
+      <button onclick="fecharListaStatus()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <div class="search-wrap" style="margin-bottom:12px;">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="lista-status-search" placeholder="Buscar jogador..." oninput="filtrarListaStatus(this.value)">
+    </div>
+    <div id="lista-status-content"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs" style="padding:3px;">
+  <button class="tab active" id="tab-album" onclick="switchTab('album')">📖</button>
+  <button class="tab" id="tab-buscar" onclick="switchTab('buscar')">🔍</button>
+  <button class="tab" id="tab-comunidades" onclick="switchTab('comunidades')">🏘️</button>
+  <button class="tab" id="tab-mensagens" onclick="switchTab('mensagens')">💬</button>
+</div>
+
+<!-- SCREEN: ALBUM -->
+<div class="content screen active" id="screen-album">
+
+  <div class="progress-card">
+    <div class="progress-title">📊 Progresso do Álbum</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label">
+      <span id="prog-label-ok">0 coladas</span>
+      <span id="prog-label-total">de 0 figurinhas</span>
+    </div>
+  </div>
+
+  <div class="section-title">🏳️ Seleções</div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" placeholder="Buscar seleção..." id="search-selecao" oninput="filterSelecoes()">
+  </div>
+
+  <div class="chip-row" id="conf-chips">
+    <div class="chip active" onclick="filterConf('Todas',this)">Todos</div>
+    <div class="chip" onclick="filterConf('grupo:Especial',this)">⭐ Especial</div>
+    <div class="chip" onclick="filterConf('grupo:A',this)">Grupo A</div>
+    <div class="chip" onclick="filterConf('grupo:B',this)">Grupo B</div>
+    <div class="chip" onclick="filterConf('grupo:C',this)">Grupo C</div>
+    <div class="chip" onclick="filterConf('grupo:D',this)">Grupo D</div>
+    <div class="chip" onclick="filterConf('grupo:E',this)">Grupo E</div>
+    <div class="chip" onclick="filterConf('grupo:F',this)">Grupo F</div>
+    <div class="chip" onclick="filterConf('grupo:G',this)">Grupo G</div>
+    <div class="chip" onclick="filterConf('grupo:H',this)">Grupo H</div>
+    <div class="chip" onclick="filterConf('grupo:I',this)">Grupo I</div>
+    <div class="chip" onclick="filterConf('grupo:J',this)">Grupo J</div>
+    <div class="chip" onclick="filterConf('grupo:K',this)">Grupo K</div>
+    <div class="chip" onclick="filterConf('grupo:L',this)">Grupo L</div>
+    <div class="chip" onclick="filterConf('América do Sul',this)">🌎 Sul-am.</div>
+    <div class="chip" onclick="filterConf('Europa',this)">🌍 Europa</div>
+    <div class="chip" onclick="filterConf('África',this)">🌍 África</div>
+    <div class="chip" onclick="filterConf('Ásia',this)">🌏 Ásia</div>
+    <div class="chip" onclick="filterConf('América do Norte',this)">🌎 CONCACAF</div>
+  </div>
+
+  <div class="selecao-grid" id="selecao-grid"></div>
+
+</div>
+
+<!-- SCREEN: FIGURINHAS DA SELEÇÃO -->
+<div class="content screen" id="screen-figs">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+    <button onclick="backToAlbum()" style="background:none;border:none;color:var(--green);font-size:22px;cursor:pointer;">←</button>
+    <div class="section-title" id="selecao-title" style="margin:0">Figurinhas</div>
+  </div>
+  <div class="chip-row" id="figs-chips">
+    <div class="chip active" onclick="filterFigs('todas',this)">Todas</div>
+    <div class="chip" onclick="filterFigs('tenho',this)">✅ Tenho</div>
+    <div class="chip" onclick="filterFigs('repetida',this)">🔵 Repetidas</div>
+    <div class="chip" onclick="filterFigs('faltante',this)">🔴 Faltantes</div>
+
+  </div>
+  <div class="fig-list" id="fig-list"></div>
+</div>
+
+<!-- SCREEN: BUSCAR TROCAS -->
+<div class="content screen" id="screen-buscar">
+  <div class="section-title">🔍 Encontrar Trocas</div>
+
+  <div class="tabs" style="margin:0 0 12px 0;">
+    <button class="tab active" id="tab-comunidade" onclick="switchBuscarTab('comunidade')">🌎 Comunidade</button>
+    <button class="tab" id="tab-minhas" onclick="switchBuscarTab('minhas')">👤 Minhas</button>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="buscar-input" placeholder="Buscar jogador..." oninput="searchTrocas(this.value)">
+  </div>
+
+  <div class="fig-list" id="trocas-list"></div>
+</div>
+
+<!-- SCREEN: COMUNIDADES -->
+<div class="content screen" id="screen-comunidades">
+  <div class="section-title">🏘️ Comunidades</div>
+
+  <div class="tabs" style="margin:0 0 12px 0;">
+    <button class="tab active" id="tab-minhas-com" onclick="switchComunidadeTab('minhas')">Minhas</button>
+    <button class="tab" id="tab-buscar-com" onclick="switchComunidadeTab('buscar')">Buscar</button>
+    <button class="tab" id="tab-admin-com" onclick="switchComunidadeTab('admin')">👑 Admin</button>
+  </div>
+
+  <!-- MINHAS COMUNIDADES -->
+  <div id="com-minhas">
+    <div id="minhas-com-list"></div>
+    <button class="btn-primary" style="margin-top:12px;" onclick="abrirCriarComunidade()">➕ Criar Nova Comunidade</button>
+  </div>
+
+  <!-- BUSCAR COMUNIDADES -->
+  <div id="com-buscar" style="display:none;">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="buscar-com-input" placeholder="Buscar por nome ou cidade..." oninput="buscarComunidades(this.value)">
+    </div>
+    <div id="buscar-com-list"></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="com-admin" style="display:none;">
+    <div id="admin-com-list"></div>
+  </div>
+</div>
+
+<!-- SCREEN: MENSAGENS -->
+<div class="content screen" id="screen-mensagens">
+  <div class="section-title">💬 Conversas de Troca</div>
+  <div class="chat-list" id="chat-list"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-album" onclick="switchTab('album')">
+    <span class="icon">📖</span>Álbum
+  </button>
+  <button class="nav-btn" id="nav-buscar" onclick="switchTab('buscar')">
+    <span class="icon">🔍</span>Buscar
+  </button>
+  <button class="nav-btn" id="nav-comunidades" onclick="switchTab('comunidades')">
+    <span class="icon">🏘️</span>Grupos
+  </button>
+  <button class="nav-btn" id="nav-mensagens" onclick="switchTab('mensagens')">
+    <span class="icon">💬</span>Trocas
+  </button>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()" title="Adicionar figurinha">+</button>
+
+<!-- MODAL: ADICIONAR FIGURINHA -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">➕ Adicionar Figurinha</div>
+    <div class="form-group">
+      <label class="form-label">Seleção</label>
+      <select class="form-select" id="modal-selecao"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Número / Código</label>
+      <input type="text" class="form-input" id="modal-num" placeholder="Ex: BRA-1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome do Jogador</label>
+      <input type="text" class="form-input" id="modal-nome" placeholder="Ex: Vinicius Jr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="modal-status">
+        <option value="tenho">✅ Tenho (colada)</option>
+        <option value="repetida">🔵 Repetida (para troca)</option>
+        <option value="faltante">🔴 Faltante (procuro)</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="addFigurinhaFromModal()">Salvar Figurinha</button>
+    <button class="btn-ghost" onclick="closeModalDirect()">Cancelar</button>
+  </div>
+</div>
+
+<!-- CHAT WINDOW -->
+<div class="chat-window" id="chat-window">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeChat()">←</button>
+    <div class="chat-user-info">
+      <div class="chat-user-name" id="chat-partner-name">—</div>
+      <div class="chat-user-sub">🟢 Online agora</div>
+    </div>
+    <span style="font-size:22px">⚽</span>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-wrap">
+    <input type="text" class="chat-input" id="chat-input" placeholder="Digite sua mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="chat-send" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PWA BANNER — Adicionar à tela inicial -->
+<div class="pwa-banner" id="pwa-banner">
+  <div class="pwa-banner-icon">⚽</div>
+  <div class="pwa-banner-info">
+    <div class="pwa-banner-title">Adicionar à Tela Inicial</div>
+    <div class="pwa-banner-sub">Acesse o TrocaFig como um app!</div>
+  </div>
+  <button class="pwa-banner-btn" onclick="instalarPWA()">Instalar</button>
+  <button class="pwa-banner-close" onclick="fecharBannerPWA()">✕</button>
+</div>
+
+<!-- Firebase compat SDK (funciona sem servidor) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+// ============================================================
+// DATA
+// ============================================================
+// Seleções organizadas por grupo, igual ao álbum Panini 2026
+// total=18 jogadores por seleção (+ figurinhas de escudo/uniforme/especiais no álbum = 994 total)
+const SELECOES = [
+  // ABERTURA
+  {id:'FWC', nome:'Abertura FIFA',      flag:'🏆', total:20, conf:'Especial',  grupo:'Especial'},
+  // COCA-COLA
+  {id:'CC',  nome:'Coca-Cola',          flag:'🥤', total:14, conf:'Especial',  grupo:'Especial'},
+  // GRUPO A
+  {id:'MEX', nome:'México',             flag:'🇲🇽', total:20, conf:'América do Norte', grupo:'A'},
+  {id:'RSA', nome:'África do Sul',      flag:'🇿🇦', total:20, conf:'África',            grupo:'A'},
+  {id:'KOR', nome:'Coreia do Sul',      flag:'🇰🇷', total:20, conf:'Ásia',              grupo:'A'},
+  {id:'CZE', nome:'República Tcheca',   flag:'🇨🇿', total:20, conf:'Europa',            grupo:'A'},
+  // GRUPO B
+  {id:'CAN', nome:'Canadá',             flag:'🇨🇦', total:20, conf:'América do Norte', grupo:'B'},
+  {id:'BIH', nome:'Bósnia e Herz.',     flag:'🇧🇦', total:20, conf:'Europa',            grupo:'B'},
+  {id:'QAT', nome:'Catar',              flag:'🇶🇦', total:20, conf:'Ásia',              grupo:'B'},
+  {id:'SUI', nome:'Suíça',              flag:'🇨🇭', total:20, conf:'Europa',            grupo:'B'},
+  // GRUPO C
+  {id:'BRA', nome:'Brasil',             flag:'🇧🇷', total:20, conf:'América do Sul',    grupo:'C'},
+  {id:'MAR', nome:'Marrocos',           flag:'🇲🇦', total:20, conf:'África',            grupo:'C'},
+  {id:'HAI', nome:'Haiti',              flag:'🇭🇹', total:20, conf:'América do Norte', grupo:'C'},
+  {id:'SCO', nome:'Escócia',            flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿', total:20, conf:'Europa',            grupo:'C'},
+  // GRUPO D
+  {id:'USA', nome:'EUA',                flag:'🇺🇸', total:20, conf:'América do Norte', grupo:'D'},
+  {id:'PAR', nome:'Paraguai',           flag:'🇵🇾', total:20, conf:'América do Sul',    grupo:'D'},
+  {id:'AUS', nome:'Austrália',          flag:'🇦🇺', total:20, conf:'Ásia',              grupo:'D'},
+  {id:'TUR', nome:'Turquia',            flag:'🇹🇷', total:20, conf:'Europa',            grupo:'D'},
+  // GRUPO E
+  {id:'ALE', nome:'Alemanha',           flag:'🇩🇪', total:20, conf:'Europa',            grupo:'E'},
+  {id:'CUR', nome:'Curaçao',            flag:'🇨🇼', total:20, conf:'América do Norte', grupo:'E'},
+  {id:'CIV', nome:'Costa do Marfim',   flag:'🇨🇮', total:20, conf:'África',            grupo:'E'},
+  {id:'ECU', nome:'Equador',            flag:'🇪🇨', total:20, conf:'América do Sul',    grupo:'E'},
+  // GRUPO F
+  {id:'NED', nome:'Holanda',            flag:'🇳🇱', total:20, conf:'Europa',            grupo:'F'},
+  {id:'JAP', nome:'Japão',              flag:'🇯🇵', total:20, conf:'Ásia',              grupo:'F'},
+  {id:'SUE', nome:'Suécia',             flag:'🇸🇪', total:20, conf:'Europa',            grupo:'F'},
+  {id:'TUN', nome:'Tunísia',            flag:'🇹🇳', total:20, conf:'África',            grupo:'F'},
+  // GRUPO G
+  {id:'BEL', nome:'Bélgica',            flag:'🇧🇪', total:20, conf:'Europa',            grupo:'G'},
+  {id:'EGI', nome:'Egito',              flag:'🇪🇬', total:20, conf:'África',            grupo:'G'},
+  {id:'IRN', nome:'Irã',                flag:'🇮🇷', total:20, conf:'Ásia',              grupo:'G'},
+  {id:'NZL', nome:'Nova Zelândia',      flag:'🇳🇿', total:20, conf:'Oceania',           grupo:'G'},
+  // GRUPO H
+  {id:'ESP', nome:'Espanha',            flag:'🇪🇸', total:20, conf:'Europa',            grupo:'H'},
+  {id:'CPV', nome:'Cabo Verde',         flag:'🇨🇻', total:20, conf:'África',            grupo:'H'},
+  {id:'KSA', nome:'Arábia Saudita',    flag:'🇸🇦', total:20, conf:'Ásia',              grupo:'H'},
+  {id:'URU', nome:'Uruguai',            flag:'🇺🇾', total:20, conf:'América do Sul',    grupo:'H'},
+  // GRUPO I
+  {id:'FRA', nome:'França',             flag:'🇫🇷', total:20, conf:'Europa',            grupo:'I'},
+  {id:'SEN', nome:'Senegal',            flag:'🇸🇳', total:20, conf:'África',            grupo:'I'},
+  {id:'IRQ', nome:'Iraque',             flag:'🇮🇶', total:20, conf:'Ásia',              grupo:'I'},
+  {id:'NOR', nome:'Noruega',            flag:'🇳🇴', total:20, conf:'Europa',            grupo:'I'},
+  // GRUPO J
+  {id:'ARG', nome:'Argentina',          flag:'🇦🇷', total:20, conf:'América do Sul',    grupo:'J'},
+  {id:'ALG', nome:'Argélia',            flag:'🇩🇿', total:20, conf:'África',            grupo:'J'},
+  {id:'AUT', nome:'Áustria',            flag:'🇦🇹', total:20, conf:'Europa',            grupo:'J'},
+  {id:'JOR', nome:'Jordânia',           flag:'🇯🇴', total:20, conf:'Ásia',              grupo:'J'},
+  // GRUPO K
+  {id:'POR', nome:'Portugal',           flag:'🇵🇹', total:20, conf:'Europa',            grupo:'K'},
+  {id:'COD', nome:'RD Congo',           flag:'🇨🇩', total:20, conf:'África',            grupo:'K'},
+  {id:'UZB', nome:'Uzbequistão',        flag:'🇺🇿', total:20, conf:'Ásia',              grupo:'K'},
+  {id:'COL', nome:'Colômbia',           flag:'🇨🇴', total:20, conf:'América do Sul',    grupo:'K'},
+  // GRUPO L
+  {id:'ENG', nome:'Inglaterra',         flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', total:20, conf:'Europa',            grupo:'L'},
+  {id:'CRO', nome:'Croácia',            flag:'🇭🇷', total:20, conf:'Europa',            grupo:'L'},
+  {id:'GHA', nome:'Gana',               flag:'🇬🇭', total:20, conf:'África',            grupo:'L'},
+  {id:'PAN', nome:'Panamá',             flag:'🇵🇦', total:20, conf:'América do Norte', grupo:'L'},
+];
+
+// Jogadores oficiais do Álbum Panini Copa do Mundo 2026
+// Fonte: CNN Brasil / Panini oficial — 18 jogadores por seleção = 994 figurinhas
+// Álbum total: 994 figurinhas (incluindo escudos, uniformes e especiais)
+const JOGADORES = {
+  // ABERTURA FIFA
+  FWC: ['FWC 00 - Emblema FIFA', 'FWC 01 - Troféu da Copa', 'FWC 02 - Bola Oficial', 'FWC 03 - Mascote', 'FWC 04 - Logo Copa 2026', 'FWC 05 - EUA Anfitrião', 'FWC 06 - México Anfitrião', 'FWC 07 - Canadá Anfitrião', 'FWC 08 - Mapa das Sedes', 'FWC 09 - Museu da Copa', 'FWC 10 - Legends 1', 'FWC 11 - Legends 2', 'FWC 12 - Legends 3', 'FWC 13 - Legends 4', 'FWC 14 - Legends 5', 'FWC 15 - Legends 6', 'FWC 16 - Legends 7', 'FWC 17 - Legends 8', 'FWC 18 - Legends 9', 'FWC 19 - Legends 10'],
+  // COCA-COLA
+  CC:  ['CC 01', 'CC 02', 'CC 03', 'CC 04', 'CC 05', 'CC 06', 'CC 07', 'CC 08', 'CC 09', 'CC 10', 'CC 11', 'CC 12', 'CC 13', 'CC 14'],
+  // GRUPO A
+  MEX: ['Escudo', 'Luis Malagón', 'Johan Vásquez', 'Jorge Sánchez', 'César Montes', 'Jesús Gallardo', 'Israel Reyes', 'Diego Lainez', 'Carlos Rodríguez', 'Edson Álvarez', 'Orbelín Pineda', 'Marcel Ruiz', 'Foto do Time', 'Érick Sánchez', 'Hirving Lozano', 'Santiago Giménez', 'Raúl Jiménez', 'Alexis Vega', 'Roberto Alvarado', 'César Huerta'],
+  PAN: ['Escudo', 'Orlando Mosquera', 'Luis Mejía', 'Fidel Escobar', 'Andrés Andrade', 'Michael Amir Murillo', 'Harold Cummings', 'Adalberto Carrasquilla', 'José Córdoba', 'Édgar Bárcenas', 'Ismael Díaz', 'Aníbal Godoy', 'Foto do Time', 'Cecilio Waterman', 'César Blackman', 'Freddy Gondola', 'Luis Harvey', 'José Fajardo', 'José Luis Rodríguez', 'Cristian Martínez'],
+  ENG: ['Escudo', 'Jordan Pickford', 'John Stones', 'Marc Guéhi', 'Ezri Konsa', 'Trent Alexander-Arnold', 'Reece James', 'Dan Burn', 'Jordan Henderson', 'Declan Rice', 'Jude Bellingham', 'Cole Palmer', 'Foto do Time', 'Morgan Rogers', 'Anthony Gordon', 'Phil Foden', 'Bukayo Saka', 'Harry Kane', 'Marcus Rashford', 'Ollie Watkins'],
+  GHA: ['Escudo', 'Lawrence Ati-Zigi', 'Tariq Lamptey', 'Alidu Seidu', 'Alexander Djiku', 'Gideon Mensah', 'Caleb Yirenkyi', 'Thomas Partey', 'Abdul Fatawu Issahaku', 'Mohammed Kudus', 'Kamaldeen Sulemana', 'Antoine Semenyo', 'Foto do Time', 'Osman Bukari', 'Ernest Nuamah', 'Jordan Ayew', 'André Ayew', 'Jordan Paintsil', 'Inaki Williams', 'Ibrahim Sulemana'],
+  RSA: ['Escudo', 'Ronwen Williams', 'Sipho Chaine', 'Aubrey Modiba', 'Samukele Kabini', 'Mbekezeli Mbokazi', 'Khulumani Ndamane', 'Siyabonga Ngezana', 'Khuliso Mudau', 'Nkosinathi Sibisi', 'Teboho Mokoena', 'Thalente Mbatha', 'Foto do Time', 'Bathuisi Aubaas', 'Yaya Sithole', 'Sipho Mbule', 'Lyle Foster', 'Ioraam Rayners', 'Mohau Nkota', 'Oswin Appolis'],
+  KOR: ['Escudo', 'Hyeon-woo Jo', 'Seung-Gyu Kim', 'Min-jae Kim', 'Yu-min Cho', 'Young-woo Seol', 'Han-beom Lee', 'Tae-seok Lee', 'Myung-jae Lee', 'Jae-sung Lee', 'In-beom Hwang', 'Kang-in Lee', 'Foto do Time', 'Seung-ho Paik', 'Jens Castrop', 'Dong-gyeong Lee', 'Gue-sung Cho', 'Heung-min Son', 'Hee-chan Hwang', 'Hyeon-Gyu Oh'],
+  CZE: ['Escudo', 'Matěj Kovář', 'Jindřich Staněk', 'Ladislav Krejčí', 'Vladimír Coufal', 'Jaroslav Zelený', 'Tomáš Holeš', 'David Zima', 'Michal Sadílek', 'Lukáš Provod', 'Lukáš Červ', 'Tomáš Souček', 'Foto do Time', 'Pavel Šulc', 'Matěj Vydra', 'Vasil Kušej', 'Tomáš Chorý', 'Václav Černý', 'Adam Hložek', 'Patrik Schick'],
+  // GRUPO B
+  CAN: ['Escudo', 'Dayne St. Clair', 'Alphonso Davies', 'Alistair Johnston', 'Samuel Adekugbe', 'Richie Laryea', 'Derek Cornelius', 'Moïse Bombito', 'Kamal Miller', 'Stephen Eustáquio', 'Ismaël Koné', 'Jonathan Osorio', 'Foto do Time', 'Jacob Shaffelburg', 'Mathieu Choinière', 'Niko Sigur', 'Tajon Buchanan', 'Liam Millar', 'Cyle Larin', 'Jonathan David'],
+  BIH: ['Escudo', 'Nikola Vasilj', 'Amar Dedić', 'Sead Kolašinac', 'Tarik Muharemović', 'Nihad Mujakić', 'Nikola Katić', 'Amir Hadžiahmetović', 'Benjamin Tahirović', 'Armin Gigović', 'Ivan Šunjić', 'Ivan Bašić', 'Foto do Time', 'Dženis Burnić', 'Esmir Bajraktarević', 'Amar Memić', 'Ermedin Demirović', 'Edin Džeko', 'Samed Baždar', 'Haris Tabaković'],
+  QAT: ['Escudo', 'Meshaal Barsham', 'Sultan Albrake', 'Lucas Mendes', 'Homam Ahmed', 'Boualem Khoukhi', 'Pedro Miguel', 'Tarek Salman', 'Mohamed Al-Mannai', 'Karim Boudiaf', 'Assim Madibo', 'Ahmed Fatehi', 'Foto do Time', 'Mohammed Waad', 'Abdulaziz Hatem', 'Hassan Al-Haydos', 'Edmilson Junior', 'Akram Hassan Afif', 'Ahmed Al Ganehi', 'Almoez Ali'],
+  SUI: ['Escudo', 'Gregor Kobel', 'Yvon Mvogo', 'Manuel Akanji', 'Ricardo Rodriguez', 'Nico Elvedi', 'Aurèle Amenda', 'Silvan Widmer', 'Granit Xhaka', 'Denis Zakaria', 'Remo Freuler', 'Fabian Rieder', 'Foto do Time', 'Ardon Jashari', 'Johan Manzambi', 'Michel Aebischer', 'Breel Embolo', 'Ruben Vargas', 'Dan Ndoye', 'Zeki Amdouni'],
+  // GRUPO C
+  BRA: ['Escudo', 'Alisson', 'Bento', 'Marquinhos', 'Éder Militão', 'Gabriel Magalhães', 'Danilo', 'Wesley', 'Lucas Paquetá', 'Casemiro', 'Bruno Guimarães', 'Luiz Henrique', 'Foto do Time', 'Vinícius Júnior', 'Rodrygo', 'João Pedro', 'Matheus Cunha', 'Gabriel Martinelli', 'Raphinha', 'Estêvão'],
+  MAR: ['Escudo', 'Yassine Bounou', 'Munir El Kajoui', 'Achraf Hakimi', 'Noussair Mazraoui', 'Nayef Aguerd', 'Romain Saïss', 'Jawad El Yamiq', 'Adam Masina', 'Sofyan Amrabat', 'Azzedine Ounahi', 'Eliesse Ben Seghir', 'Foto do Time', 'Bilal El Khannouss', 'Ismael Saibari', 'Youssef En-Nesyri', 'Abde Ezzalzouli', 'Soufiane Rahimi', 'Brahim Díaz', 'Ayoub El Kaabi'],
+  HAI: ['Escudo', 'Johny Placide', 'Carlens Arcus', 'Martin Expérience', 'Jean-Kevin Duverne', 'Ricardo Adé', 'Duke Lacroix', 'Garven Metusala', 'Hannes Delcroix', 'Leverton Pierre', 'Danley Jean Jacques', 'Jean-Ricner Bellegarde', 'Foto do Time', 'Christopher Attys', 'Derrick Etienne Jr.', 'Josué Casimir', 'Ruben Providence', 'Duckens Nazon', 'Louicius Deedson', 'Frantzdy Pierrot'],
+  SCO: ['Escudo', 'Angus Gunn', 'Jack Hendry', 'Kieran Tierney', 'Aaron Hickey', 'Andrew Robertson', 'Scott McKenna', 'John Souttar', 'Anthony Ralston', 'Grant Hanley', 'Scott McTominay', 'Billy Gilmour', 'Foto do Time', 'Lewis Ferguson', 'Ryan Christie', 'Kenny McLean', 'John McGinn', 'Lyndon Dykes', 'Che Adams', 'Ben Doak'],
+  // GRUPO D
+  USA: ['Escudo', 'Matt Freese', 'Chris Richards', 'Tim Ream', 'Mark McKenzie', 'Alex Freeman', 'Antonee Robinson', 'Tyler Adams', 'Tanner Tessmann', 'Weston McKennie', 'Christian Roldan', 'Timothy Weah', 'Foto do Time', 'Diego Luna', 'Malik Tillman', 'Christian Pulisic', 'Brenden Aaronson', 'Ricardo Pepi', 'Haji Wright', 'Folarin Balogun'],
+  PAR: ['Escudo', 'Roberto Fernández', 'Orlando Gill', 'Gustavo Gómez', 'Fabián Balbuena', 'Juan José Cáceres', 'Omar Alderete', 'Junior Alonso', 'Mathías Villasanti', 'Diego Gómez', 'Damián Bobadilla', 'Andrés Cubas', 'Foto do Time', 'Matías Galarza', 'Julio Enciso', 'Richard Sánchez', 'Santiago Arzamendia', 'Roque Santa Cruz', 'Braian Samudio', 'Antonio Sanabria'],
+  AUS: ['Escudo', 'Mathew Ryan', 'Joe Gauci', 'Harry Souttar', 'Alessandro Circati', 'Jordan Bos', 'Aziz Behich', 'Cameron Burgess', 'Lewis Miller', 'Milos Degenek', 'Jackson Irvine', 'Riley McGree', 'Foto do Time', 'Aiden ONeill', 'Connor Metcalfe', 'Patrick Yazbek', 'Craig Goodwin', 'Kusini Yengi', 'Nestory Irankunda', 'Mohamed Touré'],
+  TUR: ['Escudo', 'Ugurcan Cakir', 'Mert Muldur', 'Zeki Celik', 'Abdulkerim Bardakci', 'Caglar Soyuncu', 'Merih Demiral', 'Ferdi Kadioglu', 'Kaan Ayhan', 'Ismail Yuksek', 'Hakan Calhanoglu', 'Orkun Kokcu', 'Foto do Time', 'Arda Güler', 'Irfan Can Kahveci', 'Yunus Akgun', 'Can Uzun', 'Baris Alper Yilmaz', 'Kerem Akturkoglu', 'Kenan Yildiz'],
+  // GRUPO E
+  ALE: ['Escudo', 'Marc-André ter Stegen', 'Jonathan Tah', 'David Raum', 'Nico Schlotterbeck', 'Antonio Rüdiger', 'Waldemar Anton', 'Ridle Baku', 'Maximilian Mittelstädt', 'Joshua Kimmich', 'Florian Wirtz', 'Felix Nmecha', 'Foto do Time', 'Leon Goretzka', 'Jamal Musiala', 'Serge Gnabry', 'Kai Havertz', 'Leroy Sané', 'Karim Adeyemi', 'Nick Woltemade'],
+  CUR: ['Escudo', 'Eloy Room', 'Armando Obispo', 'Sherel Floranus', 'Jurien Gaari', 'Joshua Brenet', 'Roshon Van Eijma', 'Shurandy Sambo', 'Livano Comenencia', 'Godfried Roemeratoe', 'Juninho Bacuna', 'Leandro Bacuna', 'Foto do Time', 'Tahith Chong', 'Kenji Gorré', 'Jearl Margaritha', 'Jurgen Locadia', 'Jeremy Antonisse', 'Gervane Kastaneer', 'Sontje Hansen'],
+  CIV: ['Escudo', 'Yahia Fofana', 'Ghislain Konan', 'Wilfried Singo', 'Odilon Kossounou', 'Evan Ndicka', 'Willy Boly', 'Emmanuel Agbadou', 'Ousmane Diomande', 'Franck Kessié', 'Seko Fofana', 'Ibrahim Sangaré', 'Foto do Time', 'Jean-Philippe Gbamin', 'Amad Diallo', 'Sébastien Haller', 'Simon Adingra', 'Yan Diomande', 'Evann Guessand', 'Oumar Diakité'],
+  ECU: ['Escudo', 'Hernán Galíndez', 'Gonzalo Valle', 'Piero Hincapié', 'Pervis Estupiñán', 'Willian Pacho', 'Ángelo Preciado', 'Joel Ordóñez', 'Moisés Caicedo', 'Alan Franco', 'Kendry Páez', 'Pedro Vite', 'Foto do Time', 'John Yeboah', 'Leonardo Campana', 'Gonzalo Plata', 'Nilson Angulo', 'Alan Minda', 'Kevin Rodríguez', 'Enner Valencia'],
+  // GRUPO F
+  NED: ['Escudo', 'Bart Verbruggen', 'Virgil van Dijk', 'Micky van de Ven', 'Jurriën Timber', 'Denzel Dumfries', 'Nathan Aké', 'Jeremie Frimpong', 'Jan Paul van Hecke', 'Tijjani Reijnders', 'Ryan Gravenberch', 'Teun Koopmeiners', 'Foto do Time', 'Frenkie de Jong', 'Xavi Simons', 'Justin Kluivert', 'Memphis Depay', 'Donyell Malen', 'Wout Weghorst', 'Cody Gakpo'],
+  JAP: ['Escudo', 'Zion Suzuki', 'Henry Heroki Mochizuki', 'Ayumu Seko', 'Junnosuke Suzuki', 'Shogo Taniguchi', 'Tsuyoshi Watanabe', 'Kaishu Sano', 'Yuki Soma', 'Ao Tanaka', 'Daichi Kamada', 'Takefusa Kubo', 'Foto do Time', 'Ritsu Doan', 'Keito Nakamura', 'Takumi Minamino', 'Shuto Machino', 'Junya Ito', 'Koki Ogawa', 'Ayase Ueda'],
+  SUE: ['Escudo', 'Victor Johansson', 'Isak Hien', 'Gabriel Gudmundsson', 'Emil Holm', 'Victor Nilsson Lindelöf', 'Gustaf Lagerbielke', 'Lucas Bergvall', 'Hugo Larsson', 'Jesper Karlström', 'Yasin Ayari', 'Mattias Svanberg', 'Foto do Time', 'Daniel Svensson', 'Ken Sema', 'Roony Bardghji', 'Dejan Kulusevski', 'Anthony Elanga', 'Alexander Isak', 'Viktor Gyökeres'],
+  TUN: ['Escudo', 'Bechir Ben Said', 'Aymen Dahmen', 'Van Valery', 'Montassar Talbi', 'Yassine Meriah', 'Ali Abdi', 'Dylan Bronn', 'Ellyes Skhiri', 'Aissa Laidouni', 'Ferjani Sassi', 'Mohamed Ali Ben Romdhane', 'Foto do Time', 'Hannibal Mejbri', 'Elias Achouri', 'Elias Saad', 'Hazem Mastouri', 'Ismael Gharbi', 'Sayfallah Ltaief', 'Naim Sliti'],
+  // GRUPO G
+  BEL: ['Escudo', 'Thibaut Courtois', 'Arthur Theate', 'Timothy Castagne', 'Zeno Debast', 'Brandon Mechele', 'Maxim De Cuyper', 'Thomas Meunier', 'Youri Tielemans', 'Amadou Onana', 'Nicolas Raskin', 'Alexis Saelemaekers', 'Foto do Time', 'Hans Vanaken', 'Kevin De Bruyne', 'Jérémy Doku', 'Charles De Ketelaere', 'Leandro Trossard', 'Loïs Openda', 'Romelu Lukaku'],
+  EGI: ['Escudo', 'Mohamed El Shenawy', 'Mohamed Hany', 'Mohamed Hamdy', 'Yasser Ibrahim', 'Khaled Sobhi', 'Ramy Rabia', 'Hossam Abdelmaguid', 'Ahmed Fatouh', 'Marwan Attia', 'Zizo', 'Hamdy Fathy', 'Foto do Time', 'Mohamed Lasheen', 'Emam Ashour', 'Osama Faisal', 'Mohamed Salah', 'Mostafa Mohamed', 'Trezeguet', 'Omar Marmoush'],
+  IRN: ['Escudo', 'Alireza Beiranvand', 'Morteza Pouraliganji', 'Ehsan Hajsafi', 'Milad Mohammadi', 'Shoja Khalilzadeh', 'Ramin Rezaeian', 'Hossein Kanaani', 'Sadegh Moharrami', 'Saleh Hardani', 'Saeed Ezatolahi', 'Saman Ghoddos', 'Foto do Time', 'Omid Noorafkan', 'Roozbeh Cheshmi', 'Mohammad Mohebi', 'Sardar Azmoun', 'Mehdi Taremi', 'Alireza Jahanbakhsh', 'Ali Gholizadeh'],
+  NZL: ['Escudo', 'Max Crocombe-Payne', 'Alex Paulsen', 'Michael Boxall', 'Liberato Cacace', 'Tim Payne', 'Tyler Bindon', 'Francis de Vries', 'Finn Surman', 'Joe Bell', 'Sarpreet Singh', 'Ryan Thomas', 'Foto do Time', 'Matthew Garbett', 'Marko Stamenić', 'Ben Old', 'Chris Wood', 'Elijah Just', 'Callum McCowatt', 'Kosta Barbarouses'],
+  // GRUPO H
+  ESP: ['Escudo', 'Unai Simón', 'Robin Le Normand', 'Aymeric Laporte', 'Dean Huijsen', 'Pedro Porro', 'Dani Carvajal', 'Marc Cucurella', 'Martín Zubimendi', 'Rodri', 'Pedri', 'Fabián Ruiz', 'Foto do Time', 'Mikel Merino', 'Lamine Yamal', 'Dani Olmo', 'Nico Williams', 'Ferran Torres', 'Álvaro Morata', 'Mikel Oyarzabal'],
+  CPV: ['Escudo', 'Vozinha', 'Logan Costa', 'Pico', 'Diney', 'Steven Moreira', 'Wagner Pina', 'João Paulo', 'Yannick Semedo', 'Kevin Pina', 'Patrick Andrade', 'Jamiro Monteiro', 'Foto do Time', 'Deroy Duarte', 'Garry Rodrigues', 'Jovane Cabral', 'Ryan Mendes', 'Dailon Livramento', 'Willy Semedo', 'Bebé'],
+  KSA: ['Escudo', 'Nawaf Alaqidi', 'Abdulrahman Al-Sanbi', 'Saud Abdulhamid', 'Nawaf Boushal', 'Jihad Thakri', 'Moteb Al-Harbi', 'Hassan Altambakti', 'Musab Aljuwayr', 'Ziyad Aljohani', 'Abdullah Alkhaibari', 'Nasser Aldawsari', 'Foto do Time', 'Saleh Abu Alshamat', 'Marwan Alsahafi', 'Salem Aldawsari', 'Abdulrahman Al-Aboud', 'Feras Albrikan', 'Saleh Alshehri', 'Abdullah Al-Hamdan'],
+  URU: ['Escudo', 'Sergio Rochet', 'Santiago Mele', 'Ronald Araujo', 'José María Giménez', 'Sebastian Caceres', 'Mathias Olivera', 'Guillermo Varela', 'Nahitan Nandez', 'Federico Valverde', 'Giorgian De Arrascaeta', 'Rodrigo Bentancur', 'Foto do Time', 'Manuel Ugarte', 'Nicolás de la Cruz', 'Maxi Araujo', 'Darwin Núñez', 'Federico Viñas', 'Rodrigo Aguirre', 'Facundo Pellistri'],
+  // GRUPO I
+  FRA: ['Escudo', 'Mike Maignan', 'Theo Hernández', 'William Saliba', 'Jules Koundé', 'Ibrahima Konaté', 'Dayot Upamecano', 'Lucas Digne', 'Aurélien Tchouaméni', 'Eduardo Camavinga', 'Manu Koné', 'Adrien Rabiot', 'Foto do Time', 'Michael Olise', 'Ousmane Dembélé', 'Bradley Barcola', 'Désiré Doué', 'Kingsley Coman', 'Hugo Ekitike', 'Kylian Mbappé'],
+  SEN: ['Escudo', 'Eduardo Mendy', 'Yehvann Diouf', 'Moussa Niakhaté', 'Abdoulaye Seck', 'Ismail Jakobs', 'El Hadji Malick Diouf', 'Kalidou Koulibaly', 'Idrissa Gana Gueye', 'Pape Matar Sarr', 'Pape Gueye', 'Habib Diarra', 'Foto do Time', 'Lamine Camara', 'Sadio Mané', 'Ismaïla Sarr', 'Boulaye Dia', 'Iliman Ndiaye', 'Nicolas Jackson', 'Krepin Diatta'],
+  IRQ: ['Escudo', 'Jalal Hassan', 'Rebin Sulaka', 'Hussein Ali', 'Akam Hashem', 'Merchas Doski', 'Zaid Tahseen', 'Manaf Younis', 'Zidane Iqbal', 'Amir Al-Ammari', 'Ibrahim Bayesh', 'Ali Jasim', 'Foto do Time', 'Youssef Amyn', 'Aimar Sher', 'Marko Farji', 'Osama Rashid', 'Ali Al-Hamadi', 'Aymen Hussein', 'Mohanad Ali'],
+  NOR: ['Escudo', 'Ørjan Nyland', 'Julian Ryerson', 'Leo Østigård', 'Kristoffer Ajer', 'Marcus Holmgren Pedersen', 'David Møller Wolfe', 'Torbjørn Heggem', 'Morten Thorsby', 'Martin Ødegaard', 'Sander Berge', 'Andreas Schjelderup', 'Foto do Time', 'Patrick Berg', 'Erling Haaland', 'Alexander Sørloth', 'Aron Dønnum', 'Jørgen Strand Larsen', 'Antonio Nusa', 'Oscar Bobb'],
+  // GRUPO J
+  ARG: ['Escudo', 'Emiliano Martínez', 'Nahuel Molina', 'Cristian Romero', 'Nicolás Otamendi', 'Nicolás Tagliafico', 'Leonardo Balerdi', 'Enzo Fernández', 'Alexis Mac Allister', 'Rodrigo De Paul', 'Exequiel Palacios', 'Leandro Paredes', 'Foto do Time', 'Nico Paz', 'Franco Mastantuono', 'Nico González', 'Lionel Messi', 'Lautaro Martínez', 'Julián Álvarez', 'Giuliano Simeone'],
+  ALG: ['Escudo', 'Alexis Guendouz', 'Ramy Bensebaini', 'Youcef Atal', 'Rayan Aït-Nouri', 'Mohamed Amine Tougai', 'Aïssa Mandi', 'Ismael Bennacer', 'Houssem Aouar', 'Hicham Boudaoui', 'Ramiz Zerrouki', 'Nabil Bentaleb', 'Foto do Time', 'Farés Chaibi', 'Riyad Mahrez', 'Said Benrahma', 'Anis Hadj Moussa', 'Amine Gouiri', 'Baghdad Bounedjah', 'Mohammed Amoura'],
+  AUT: ['Escudo', 'Alexander Schlager', 'Patrick Pentz', 'David Alaba', 'Kevin Danso', 'Philipp Lienhart', 'Stefan Posch', 'Phillipp Mwene', 'Alexander Prass', 'Xaver Schlager', 'Marcel Sabitzer', 'Konrad Laimer', 'Foto do Time', 'Florian Grillitsch', 'Nicolas Seiwald', 'Romano Schmid', 'Patrick Wimmer', 'Christoph Baumgartner', 'Michael Gregoritsch', 'Marko Arnautović'],
+  JOR: ['Escudo', 'Yazeed Abulaila', 'Ihsan Haddad', 'Mohammad Abu Hashish', 'Yazan Al-Arab', 'Abdallah Nasib', 'Saleem Obaid', 'Mohammad Abualnadi', 'Ibrahim Saadeh', 'Nizar Al-Rashdan', 'Noor Al-Rawabdeh', 'Mohannad Abu Taha', 'Foto do Time', 'Amer Jamous', 'Musa Al-Taamari', 'Yazan Al-Naimat', 'Mahmoud Al-Mardi', 'Ali Olwan', 'Mohammad Abu Zrayq', 'Ibrahim Sabra'],
+  // GRUPO K
+  POR: ['Escudo', 'Diogo Costa', 'Jose Sá', 'Ruben Dias', 'João Cancelo', 'Diogo Dalot', 'Nuno Mendes', 'Gonçalo Inácio', 'Bernardo Silva', 'Bruno Fernandes', 'Ruben Neves', 'Vitinha', 'Foto do Time', 'João Neves', 'Cristiano Ronaldo', 'Francisco Trincão', 'João Félix', 'Gonçalo Ramos', 'Pedro Neto', 'Rafael Leão'],
+  COD: ['Escudo', 'Lionel Mpasi', 'Aaron Wan-Bissaka', 'Axel Tuanzebe', 'Arthur Masuaku', 'Chancel Mbemba', 'Joris Kayembe', 'Charles Pickel', 'Ngalayel Mukau', 'Edo Kayembe', 'Samuel Moutoussamy', 'Noah Sadiki', 'Foto do Time', 'Théo Bongonda', 'Meschack Elia', 'Yoane Wissa', 'Brian Cipenga', 'Fiston Mayele', 'Cédric Bakambu', 'Nathanaël Mbuku'],
+  UZB: ['Escudo', 'Utkir Yusupov', 'Farrukh Sayfiev', 'Sherzod Nasrullaev', 'Umar Eshmurodov', 'Husniddin Aliqulov', 'Rustamjon Ashurmatov', 'Khojiakbar Alijonov', 'Abdukodir Khusanov', 'Odiljon Hamrobekov', 'Otabek Shukurov', 'Jamshid Iskanderov', 'Foto do Time', 'Azizbek Turgunboev', 'Khojimat Erkinov', 'Eldor Shomurodov', 'Oston Urunov', 'Jaloliddin Masharipov', 'Igor Sergeev', 'Abbosbek Fayzullaev'],
+  CRO: ['Escudo', 'Dominik Livaković', 'Duje Caleta-Car', 'Joško Gvardiol', 'Josip Stanišić', 'Luka Vušković', 'Josip Šutalo', 'Kristijan Jakić', 'Luka Modrić', 'Mateo Kovačić', 'Martin Baturina', 'Lovro Majer', 'Foto do Time', 'Mario Pašalić', 'Petar Sučić', 'Ivan Perišić', 'Marco Pašalić', 'Ante Budimir', 'Andrej Kramarić', 'Franko Kovačević'],
+  COL: ['Escudo', 'Camilo Vargas', 'David Ospina', 'Dávinson Sánchez', 'Yerry Mina', 'Daniel Muñoz', 'Johan Mojica', 'Jhon Lucumí', 'Santiago Arias', 'Jefferson Lerma', 'Kevin Castaño', 'Richard Ríos', 'Foto do Time', 'James Rodríguez', 'Juan Fernando Quintero', 'Jorge Carrascal', 'Jhon Arias', 'Jhon Córdoba', 'Luis Suárez', 'Luis Díaz'],
+};
+
+
+
+let figurinhas = [];
+let conversas = [];
+let currentUser = null;
+let db = null;
+let auth = null;
+let chatUnsubscribe = null;
+
+// ============================================================
+// FIREBASE — compat SDK (funciona com file:// e sem servidor)
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyC3THPyU3DgqeHCTwTYvulXVxAPfeAK9aQ",
+  authDomain: "trocafig2026.firebaseapp.com",
+  projectId: "trocafig2026",
+  storageBucket: "trocafig2026.firebasestorage.app",
+  messagingSenderId: "315287698566",
+  appId: "1:315287698566:web:95c43f279ad2921e07e507"
+};
+
+firebase.initializeApp(firebaseConfig);
+auth = firebase.auth();
+db = firebase.firestore();
+
+// Monitorar estado de autenticação
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    currentUser = { uid: user.uid, nome: user.displayName || user.email, email: user.email };
+    const initials = (user.displayName || user.email).split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('header-avatar').textContent = initials;
+    document.getElementById('login-screen').classList.remove('active');
+    await loadUserFigurinhas();
+    updateStats();
+    renderSelecoes();
+    showToast('👋 Bem-vindo, ' + (user.displayName || 'colecionador').split(' ')[0] + '!');
+    setTimeout(mostrarTutorialSeNecessario, 600);
+  } else {
+    currentUser = null;
+    document.getElementById('login-screen').classList.add('active');
+  }
+});
+
+// ============================================================
+// AUTH — LOGIN / CADASTRO
+// ============================================================
+function switchLoginTab(tab) {
+  document.getElementById('form-entrar').style.display = tab === 'entrar' ? 'block' : 'none';
+  document.getElementById('form-cadastro').style.display = tab === 'cadastro' ? 'block' : 'none';
+  document.getElementById('ltab-entrar').classList.toggle('active', tab === 'entrar');
+  document.getElementById('ltab-cadastro').classList.toggle('active', tab === 'cadastro');
+  showLoginError('');
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.classList.toggle('show', !!msg);
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { showLoginError('Preencha e-mail e senha.'); return; }
+  try {
+    showLoginError('Entrando...');
+    await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e) {
+    const msgs = { 'auth/user-not-found':'E-mail não encontrado.', 'auth/wrong-password':'Senha incorreta.', 'auth/invalid-email':'E-mail inválido.', 'auth/invalid-credential':'E-mail ou senha incorretos.' };
+    showLoginError(msgs[e.code] || 'Erro ao entrar. Tente novamente.');
+  }
+}
+
+async function doCadastro() {
+  const nome = document.getElementById('cad-nome').value.trim();
+  const email = document.getElementById('cad-user').value.trim();
+  const pass = document.getElementById('cad-pass').value;
+  const pass2 = document.getElementById('cad-pass2').value;
+  if (!nome || !email || !pass || !pass2) { showLoginError('Preencha todos os campos.'); return; }
+  if (pass.length < 6) { showLoginError('Senha deve ter ao menos 6 caracteres.'); return; }
+  if (pass !== pass2) { showLoginError('As senhas não coincidem.'); return; }
+  try {
+    showLoginError('Criando conta...');
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: nome });
+    await db.collection('users').doc(cred.user.uid).set({ nome, email, criadoEm: firebase.firestore.FieldValue.serverTimestamp() });
+    // Enviar e-mail de confirmação
+    await cred.user.sendEmailVerification();
+    showToast('📧 Conta criada! Verifique seu e-mail para confirmar.');
+  } catch(e) {
+    const msgs = { 'auth/email-already-in-use':'Este e-mail já está cadastrado.', 'auth/invalid-email':'E-mail inválido.', 'auth/weak-password':'Senha muito fraca.' };
+    showLoginError(msgs[e.code] || 'Erro ao criar conta. Tente novamente.');
+  }
+}
+
+async function doLogout() {
+  if (!confirm('Tem certeza que deseja sair?')) return;
+  if (chatUnsubscribe) chatUnsubscribe();
+  await auth.signOut();
+  figurinhas = [];
+  conversas = [];
+}
+
+// ============================================================
+// FIRESTORE — FIGURINHAS
+// ============================================================
+async function loadUserFigurinhas() {
+  if (!currentUser) return;
+  const snap = await db.collection('figurinhas').doc(currentUser.uid).get();
+  figurinhas = snap.exists ? (snap.data().lista || []) : [];
+}
+
+async function save() {
+  if (!currentUser) return;
+  await db.collection('figurinhas').doc(currentUser.uid).set({ lista: figurinhas, atualizadoEm: firebase.firestore.FieldValue.serverTimestamp() });
+}
+
+// ============================================================
+// FIRESTORE — CHAT EM TEMPO REAL
+// ============================================================
+function ouvirMensagens(chatId) {
+  if (chatUnsubscribe) chatUnsubscribe();
+  chatUnsubscribe = db.collection('chats').doc(chatId).collection('mensagens')
+    .orderBy('criadoEm', 'asc')
+    .onSnapshot((snap) => {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML = snap.docs.map(d => {
+        const m = d.data();
+        const tipo = m.autorId === currentUser.uid ? 'sent' : 'received';
+        const hora = m.criadoEm ? new Date(m.criadoEm.toDate()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '';
+        return `<div class="msg ${tipo}">${m.texto}<div class="msg-time">${hora}</div></div>`;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+    });
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const txt = inp.value.trim();
+  if (!txt || !currentChat) return;
+  inp.value = '';
+  await db.collection('chats').doc(currentChat).collection('mensagens').add({
+    texto: txt,
+    autorId: currentUser.uid,
+    autorNome: currentUser.nome,
+    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  await db.collection('chats').doc(currentChat).set({
+    ultimaMensagem: txt,
+    atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    participantes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+  }, { merge: true });
+}
+
+async function renderChats() {
+  if (!currentUser) return;
+  const list = document.getElementById('chat-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>';
+  try {
+    const snap = await db.collection('chats')
+      .where('participantes', 'array-contains', currentUser.uid)
+      .orderBy('atualizadoEm', 'desc')
+      .get();
+
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Sem conversas</div><div class="empty-sub">Vá em Buscar → Comunidade e toque numa figurinha repetida de alguém para iniciar uma troca!</div></div>';
+      return;
+    }
+
+    list.innerHTML = snap.docs.map(d => {
+      const c = d.data();
+      const outroUid = (c.participantes || []).find(p => p !== currentUser.uid) || '';
+      const outroNome = (c.nomes && c.nomes[outroUid]) || 'Usuário';
+      const hora = c.atualizadoEm ? new Date(c.atualizadoEm.toDate()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '';
+      const initials = outroNome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const color = strToColor(outroNome);
+      const figLabel = c.figurinha ? `<div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;">⚽ ${c.numFig} · ${c.figurinha}</div>` : '';
+      return `<div class="chat-item" onclick="abrirChatExistente('${d.id}','${outroNome.replace(/'/g,'')}','${(c.figurinha||'').replace(/'/g,'')}')">
+        <div class="chat-avatar" style="background:${color}22;color:${color};font-weight:800;font-size:14px;">${initials}</div>
+        <div class="chat-info">
+          <div class="chat-name">${outroNome}</div>
+          ${figLabel}
+          <div class="chat-preview">${c.ultimaMensagem || 'Toque para conversar'}</div>
+        </div>
+        <div class="chat-meta"><div class="chat-time">${hora}</div></div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Sem conversas ainda</div><div class="empty-sub">Inicie uma troca pelo Buscar!</div></div>';
+  }
+}
+
+function abrirChatExistente(chatId, outroNome, nomeFig) {
+  currentChat = chatId;
+  const titulo = nomeFig ? outroNome + ' · ' + nomeFig : outroNome;
+  document.getElementById('chat-partner-name').textContent = titulo;
+  document.getElementById('chat-window').classList.add('open');
+  ouvirMensagens(chatId);
+}
+
+function closeChat() {
+  if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
+  document.getElementById('chat-window').classList.remove('open');
+  currentChat = null;
+}
+
+async function startChat(nomeFig) {
+  const chatId = currentUser.uid + '_' + Date.now();
+  await db.collection('chats').doc(chatId).set({
+    participantes: [currentUser.uid],
+    ultimaMensagem: 'Tenho ' + nomeFig + ' para trocar!',
+    atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    tipo: 'proposta'
+  });
+  await db.collection('chats').doc(chatId).collection('mensagens').add({
+    texto: 'Oi! Tenho a figurinha ' + nomeFig + ' para trocar. Alguém tem interesse?',
+    autorId: currentUser.uid,
+    autorNome: currentUser.nome,
+    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  switchTab('mensagens');
+  setTimeout(() => openChat(chatId), 300);
+}
+
+
+function showToast(msg, cor) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = cor || '#00C853';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function updateStats() {
+  const ok = figurinhas.filter(f => f.status === 'tenho').length;
+  // Repetidas: soma das quantidades (qtd - 1 é o excedente, mas mostramos o total de cópias extras)
+  const repFigs = figurinhas.filter(f => f.status === 'repetida');
+  const rep = repFigs.reduce((s, f) => s + Math.max(1, (f.qtd || 2) - 1), 0); // total de cópias para trocar
+  const trocada = 0;
+  const falt = figurinhas.filter(f => f.status === 'faltante').length;
+  const totalAlbum = SELECOES.reduce((s,sel) => s + sel.total, 0);
+  const marcadas = ok + repFigs.length + falt + trocada;
+  const totalFaltantes = falt + (totalAlbum - marcadas);
+  const pct = totalAlbum > 0 ? Math.round(((ok + repFigs.length + trocada) / totalAlbum) * 100) : 0;
+
+  document.getElementById('stat-total').textContent = ok + repFigs.length;
+  document.getElementById('stat-rep').textContent = rep; // cópias extras para trocar
+  document.getElementById('stat-falt').textContent = totalFaltantes;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prog-label-ok').textContent = (ok + repFigs.length) + ' coladas';
+  document.getElementById('prog-label-total').textContent = 'de ' + totalAlbum + ' figurinhas';
+}
+
+// ============================================================
+// PWA — Instalar na tela inicial
+// ============================================================
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostrar banner após 3 segundos se usuário estiver logado
+  setTimeout(() => {
+    if (currentUser && !localStorage.getItem('trocafig_pwa_dispensado')) {
+      document.getElementById('pwa-banner').classList.add('show');
+    }
+  }, 3000);
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-banner').classList.remove('show');
+  deferredPrompt = null;
+  showToast('✅ TrocaFig instalado com sucesso!');
+});
+
+function instalarPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((result) => {
+      if (result.outcome === 'accepted') {
+        showToast('🎉 TrocaFig instalado!');
+      }
+      deferredPrompt = null;
+      document.getElementById('pwa-banner').classList.remove('show');
+    });
+  } else {
+    // iOS não suporta prompt automático — mostrar instruções
+    mostrarInstrucoesPWA();
+  }
+}
+
+function fecharBannerPWA() {
+  document.getElementById('pwa-banner').classList.remove('show');
+  localStorage.setItem('trocafig_pwa_dispensado', '1');
+}
+
+function mostrarInstrucoesPWA() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  let msg = '';
+  if (isIOS) {
+    msg = '📱 No iPhone/iPad:\n1. Toque no ícone de compartilhar (□↑)\n2. Role e toque em "Adicionar à Tela de Início"\n3. Toque em "Adicionar"';
+  } else if (isAndroid) {
+    msg = '🤖 No Android:\n1. Toque nos 3 pontinhos (⋮) do Chrome\n2. Toque em "Adicionar à tela inicial"\n3. Confirme';
+  } else {
+    msg = 'Abra o app no celular para adicionar à tela inicial!';
+  }
+  alert(msg);
+  fecharBannerPWA();
+}
+
+window.instalarPWA = instalarPWA;
+window.fecharBannerPWA = fecharBannerPWA;
+
+// ============================================================
+// MENU PERFIL
+// ============================================================
+function abrirMenuPerfil() {
+  const menu = document.getElementById('menu-perfil');
+  const aberto = menu.style.display === 'block';
+  menu.style.display = aberto ? 'none' : 'block';
+  if (!aberto && currentUser) {
+    document.getElementById('menu-nome').textContent = currentUser.nome;
+    document.getElementById('menu-email').textContent = currentUser.email;
+  }
+}
+
+function fecharMenuPerfil() {
+  document.getElementById('menu-perfil').style.display = 'none';
+}
+
+// Fechar menu ao clicar fora
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('menu-perfil');
+  const avatar = document.getElementById('header-avatar');
+  if (menu && !menu.contains(e.target) && e.target !== avatar) {
+    menu.style.display = 'none';
+  }
+});
+
+// ============================================================
+// LISTA POR STATUS (clique na stats bar)
+// ============================================================
+let listaStatusAtual = 'coladas';
+let listaStatusItens = [];
+
+function abrirListaStatus(status) {
+  listaStatusAtual = status;
+  document.getElementById('lista-status-search').value = '';
+
+  const titulos = {
+    coladas: '✅ Figurinhas Coladas',
+    repetida: '🔵 Figurinhas Repetidas',
+    faltante: '🔴 Figurinhas Faltantes',
+  };
+  document.getElementById('lista-status-title').textContent = titulos[status] || status;
+
+  // Montar lista
+  if (status === 'faltante') {
+    // Faltantes = marcadas como faltante + todas as não marcadas
+    listaStatusItens = [];
+    for (const sel of SELECOES) {
+      const jogadores = JOGADORES[sel.id] || [];
+      jogadores.forEach((nome, i) => {
+        const num = sel.id + '-' + (i + 1);
+        const minha = figurinhas.find(f => f.num === num);
+        if (!minha || minha.status === 'faltante') {
+          listaStatusItens.push({ num, nome, selecao: sel.id, flag: sel.flag, nomeSel: sel.nome, status: 'faltante' });
+        }
+      });
+    }
+  } else if (status === 'coladas') {
+    listaStatusItens = figurinhas
+      .filter(f => f.status === 'tenho' || f.status === 'repetida')
+      .map(f => {
+        const sel = SELECOES.find(s => s.id === f.selecao);
+        return { ...f, flag: sel ? sel.flag : '', nomeSel: sel ? sel.nome : f.selecao };
+      });
+  } else {
+    listaStatusItens = figurinhas
+      .filter(f => f.status === status)
+      .map(f => {
+        const sel = SELECOES.find(s => s.id === f.selecao);
+        return { ...f, flag: sel ? sel.flag : '', nomeSel: sel ? sel.nome : f.selecao };
+      });
+  }
+
+  renderListaStatus('');
+  document.getElementById('modal-lista-status').classList.add('open');
+}
+
+function renderListaStatus(q) {
+  const content = document.getElementById('lista-status-content');
+  const term = q.toLowerCase();
+  const filtrados = term
+    ? listaStatusItens.filter(f => f.nome.toLowerCase().includes(term) || f.nomeSel.toLowerCase().includes(term))
+    : listaStatusItens;
+
+  if (filtrados.length === 0) {
+    content.innerHTML = `<div class="empty-state"><div class="empty-icon">${listaStatusAtual === 'faltante' ? '🎉' : '📋'}</div><div class="empty-title">${listaStatusAtual === 'faltante' ? 'Álbum completo!' : 'Nenhuma figurinha'}</div></div>`;
+    return;
+  }
+
+  const badgeMap = {
+    tenho: '<span class="fig-badge badge-ok">✅ Tenho</span>',
+    repetida: '<span class="fig-badge badge-repetida">🔵 Repetida</span>',
+    faltante: '<span class="fig-badge badge-faltante">🔴 Faltante</span>',
+  };
+
+  content.innerHTML = `<div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;">${filtrados.length} figurinha(s)</div>` +
+    filtrados.map(f => `
+      <div class="fig-card" style="margin-bottom:8px;">
+        <div class="fig-num" style="font-size:13px;">${f.num}</div>
+        <div class="fig-thumb" style="overflow:hidden;">${figThumb(f.nome, f.status)}</div>
+        <div class="fig-info">
+          <div class="fig-name">${f.nome}</div>
+          <div class="fig-selecao">${f.flag} ${f.nomeSel}</div>
+        </div>
+        ${badgeMap[f.status] || ''}
+      </div>
+    `).join('');
+}
+
+function filtrarListaStatus(q) {
+  renderListaStatus(q);
+}
+
+function fecharListaStatus() {
+  document.getElementById('modal-lista-status').classList.remove('open');
+}
+
+window.abrirListaStatus = abrirListaStatus;
+window.filtrarListaStatus = filtrarListaStatus;
+window.fecharListaStatus = fecharListaStatus;
+
+// ============================================================
+// ZERAR ÁLBUM
+// ============================================================
+function confirmarZerarAlbum() {
+  document.getElementById('input-zerar').value = '';
+  const btn = document.getElementById('btn-confirmar-zerar');
+  btn.style.opacity = '0.4';
+  btn.style.pointerEvents = 'none';
+  document.getElementById('modal-zerar').classList.add('open');
+}
+
+function fecharZerarAlbum() {
+  document.getElementById('modal-zerar').classList.remove('open');
+}
+
+function validarZerar(val) {
+  const btn = document.getElementById('btn-confirmar-zerar');
+  const ok = val.trim().toUpperCase() === 'ZERAR';
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.pointerEvents = ok ? 'auto' : 'none';
+}
+
+async function executarZerarAlbum() {
+  if (!currentUser) return;
+  try {
+    figurinhas = [];
+    await save();
+    updateStats();
+    renderSelecoes();
+    fecharZerarAlbum();
+    showToast('🗑️ Álbum zerado com sucesso!', '#FF8C00');
+  } catch(e) {
+    showToast('❌ Erro ao zerar. Tente novamente.', '#FF3D3D');
+  }
+}
+
+// ============================================================
+// COMPARTILHAR LISTAS (WhatsApp)
+// ============================================================
+function gerarListaPorStatus(status) {
+  // Agrupar figurinhas por seleção
+  const porSelecao = {};
+  
+  if (status === 'repetida') {
+    // Repetidas: só as marcadas como repetida
+    figurinhas.filter(f => f.status === 'repetida').forEach(f => {
+      const selId = f.selecao || f.num.split('-')[0];
+      if (!porSelecao[selId]) porSelecao[selId] = [];
+      const numFig = f.num.split('-')[1] || f.num;
+      const qtd = Math.max(1, (f.qtd || 2) - 1); // no mínimo 1 cópia para trocar
+      porSelecao[selId].push(numFig + '(' + qtd + 'x)');
+    });
+  } else {
+    // Faltantes: marcadas como faltante + todas não marcadas
+    for (const sel of SELECOES) {
+      const jogadores = JOGADORES[sel.id] || [];
+      jogadores.forEach((nome, i) => {
+        const num = sel.id + '-' + (i + 1);
+        const minha = figurinhas.find(f => f.num === num);
+        if (!minha || minha.status === 'faltante') {
+          if (!porSelecao[sel.id]) porSelecao[sel.id] = [];
+          porSelecao[sel.id].push(String(i + 1));
+        }
+      });
+    }
+  }
+  
+  // Gerar texto formatado
+  let linhas = [];
+  for (const [selId, nums] of Object.entries(porSelecao)) {
+    if (nums.length > 0) {
+      linhas.push(selId + ': ' + nums.join(', '));
+    }
+  }
+  return linhas.join('\n');
+}
+
+function compartilharRepetidas() {
+  const lista = gerarListaPorStatus('repetida');
+  if (!lista) {
+    showToast('⚠️ Você não tem figurinhas repetidas marcadas.', '#FF8C00');
+    return;
+  }
+  const totalRep = figurinhas.filter(f => f.status === 'repetida').reduce((s, f) => s + Math.max(1, (f.qtd || 2) - 1), 0);
+  const texto = '⚽ *Minhas figurinhas REPETIDAS* 🔵\n' +
+    '_TrocaFig 2026_\n\n' +
+    lista + '\n\n' +
+    '📊 Total: ' + totalRep + ' figurinha(s) para trocar\n\n' +
+    '👉 Baixe o app: https://trocafig.pages.dev';
+  
+  compartilharWhatsApp(texto);
+}
+
+function compartilharFaltantes() {
+  const lista = gerarListaPorStatus('faltante');
+  if (!lista) {
+    showToast('🎉 Seu álbum está completo!');
+    return;
+  }
+  const totalAlbum = SELECOES.reduce((s, sel) => s + sel.total, 0);
+  const marcadas = figurinhas.filter(f => f.status === 'tenho' || f.status === 'repetida').length;
+  const totalFalt = totalAlbum - marcadas;
+  const texto = '⚽ *Minhas figurinhas FALTANTES* 🔴\n' +
+    '_TrocaFig 2026_\n\n' +
+    lista + '\n\n' +
+    '📊 Total: ' + totalFalt + ' figurinha(s) faltando\n\n' +
+    '👉 Baixe o app: https://trocafig.pages.dev';
+  
+  compartilharWhatsApp(texto);
+}
+
+function compartilharWhatsApp(texto) {
+  // Tentar usar Web Share API primeiro (melhor no celular)
+  if (navigator.share) {
+    navigator.share({
+      text: texto
+    }).catch(() => {
+      // Fallback: abrir WhatsApp direto
+      window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank');
+    });
+  } else {
+    // Desktop: abrir WhatsApp Web
+    window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank');
+  }
+}
+
+
+// ============================================================
+// GERAR TABELA DO ÁLBUM (PNG) — A4 retrato com bandeiras
+// ============================================================
+function gerarTabelaAlbum() {
+  showToast('📊 Gerando tabela...');
+  setTimeout(() => {
+    // A4 retrato em pixels (2x para retina)
+    const pageW = 794; // ~210mm at 96dpi
+    const pageH = 1123; // ~297mm at 96dpi
+    const scale = 2;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = pageW * scale;
+    canvas.height = pageH * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    
+    // Fundo branco
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, pageW, pageH);
+    
+    // Cores por grupo
+    const grupoCores = {
+      'Especial': ['#F9A825','#FFD600'],
+      'A': ['#C62828','#E53935'], 'B': ['#1565C0','#1E88E5'],
+      'C': ['#2E7D32','#43A047'], 'D': ['#E65100','#FB8C00'],
+      'E': ['#6A1B9A','#8E24AA'], 'F': ['#00695C','#00897B'],
+      'G': ['#AD1457','#D81B60'], 'H': ['#283593','#3949AB'],
+      'I': ['#00838F','#00ACC1'], 'J': ['#D84315','#F4511E'],
+      'K': ['#558B2F','#7CB342'], 'L': ['#4E342E','#6D4C41']
+    };
+    
+    // Banner topo
+    const grad = ctx.createLinearGradient(0, 0, pageW, 0);
+    grad.addColorStop(0, '#004d25');
+    grad.addColorStop(0.4, '#007A32');
+    grad.addColorStop(1, '#00C853');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, pageW, 42);
+    
+    // Título
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText('⚽ FIGURINHAS COPA 2026', 14, 22);
+    ctx.font = '9px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText('CONTROLE DO ÁLBUM PANINI', 14, 35);
+    
+    // Stats direita
+    const ok = figurinhas.filter(f => f.status === 'tenho' || f.status === 'repetida').length;
+    const totalAlbum = SELECOES.reduce((s, sel) => s + sel.total, 0);
+    const pct = Math.round(ok / totalAlbum * 100);
+    ctx.textAlign = 'right';
+    ctx.font = 'bold 22px Arial';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(pct + '%', pageW - 14, 24);
+    ctx.font = 'bold 9px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.fillText(ok + ' / ' + totalAlbum + ' COLADAS  |  ' + (totalAlbum - ok) + ' FALTANTES', pageW - 14, 37);
+    
+    // Configurações da tabela
+    const startX = 8;
+    const labelW = 108;
+    const cols = 20;
+    const cellW = (pageW - labelW - startX - 8) / cols;
+    const cellH = 17;
+    const grupoH = 15;
+    
+    // Header números
+    let y = 48;
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, y, pageW, 14);
+    ctx.font = 'bold 7px Arial';
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    for (let i = 0; i < cols; i++) {
+      ctx.fillText(String(i + 1), startX + labelW + (i * cellW) + cellW/2, y + 10);
+    }
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, y + 14);
+    ctx.lineTo(pageW, y + 14);
+    ctx.stroke();
+    
+    y += 16;
+    
+    // Renderizar seleções
+    let lastGrupo = '';
+    
+    for (const sel of SELECOES) {
+      // Cabeçalho de grupo
+      if (sel.grupo !== lastGrupo) {
+        lastGrupo = sel.grupo;
+        const cores = grupoCores[sel.grupo] || ['#666','#888'];
+        const ggrad = ctx.createLinearGradient(0, y, pageW, y);
+        ggrad.addColorStop(0, cores[0]);
+        ggrad.addColorStop(1, cores[1]);
+        ctx.fillStyle = ggrad;
+        ctx.fillRect(0, y, pageW, grupoH);
+        ctx.fillStyle = sel.grupo === 'Especial' ? '#333' : '#FFFFFF';
+        ctx.font = 'bold 8px Arial';
+        ctx.textAlign = 'left';
+        const grupoLabel = sel.grupo === 'Especial' ? '⭐ ESPECIAL' : '🏆 GRUPO ' + sel.grupo;
+        ctx.fillText(grupoLabel, startX + 4, y + 11);
+        y += grupoH;
+      }
+      
+      // Fundo alternado
+      const idx = SELECOES.indexOf(sel);
+      ctx.fillStyle = idx % 2 === 0 ? '#fdfdfd' : '#fff';
+      ctx.fillRect(0, y, pageW, cellH);
+      
+      // Linha inferior
+      ctx.strokeStyle = '#f0f0f0';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(0, y + cellH);
+      ctx.lineTo(pageW, y + cellH);
+      ctx.stroke();
+      
+      // Bandeira
+      ctx.font = '11px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillText(sel.flag, startX + 2, y + 13);
+      
+      // Nome do país
+      ctx.font = 'bold 7.5px Arial';
+      ctx.fillStyle = '#222';
+      const nc = sel.nome.length > 13 ? sel.nome.substring(0, 12) + '.' : sel.nome;
+      ctx.fillText(nc, startX + 22, y + 9);
+      
+      // Sigla
+      ctx.font = '6.5px Arial';
+      ctx.fillStyle = '#aaa';
+      ctx.fillText(sel.id, startX + 22, y + 16);
+      
+      // Células
+      const numCols = sel.total || 20;
+      for (let i = 0; i < numCols; i++) {
+        const num = sel.id + '-' + (i + 1);
+        const minha = figurinhas.find(f => f.num === num);
+        const cx = startX + labelW + (i * cellW);
+        const tenho = minha && (minha.status === 'tenho' || minha.status === 'repetida' || minha.status === 'trocada');
+        
+        const bx = cx + 1;
+        const by = y + 1.5;
+        const bw = cellW - 2;
+        const bh = cellH - 3;
+        
+        if (tenho) {
+          ctx.fillStyle = '#00C853';
+          ctx.fillRect(bx, by, bw, bh);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = 'bold 8px Arial';
+        } else {
+          ctx.fillStyle = '#FFF9C4';
+          ctx.fillRect(bx, by, bw, bh);
+          ctx.strokeStyle = '#FFE082';
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(bx, by, bw, bh);
+          ctx.fillStyle = '#F57F17';
+          ctx.font = 'bold 7px Arial';
+        }
+        ctx.textAlign = 'center';
+        ctx.fillText(String(i + 1), cx + cellW/2, y + 11);
+      }
+      
+      y += cellH;
+    }
+    
+    // Legenda
+    y += 8;
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 9px Arial';
+    
+    ctx.fillStyle = '#00C853';
+    ctx.fillRect(startX + 10, y, 14, 14);
+    ctx.fillStyle = '#333';
+    ctx.fillText('= Tenho', startX + 28, y + 11);
+    
+    ctx.fillStyle = '#FFF9C4';
+    ctx.fillRect(startX + 100, y, 14, 14);
+    ctx.strokeStyle = '#FFE082';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(startX + 100, y, 14, 14);
+    ctx.fillStyle = '#333';
+    ctx.fillText('= Faltante', startX + 118, y + 11);
+    
+    ctx.fillStyle = '#ccc';
+    ctx.font = '8px Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText('TrocaFig 2026 · trocafig.pages.dev', pageW - 12, y + 11);
+    
+    // Exportar
+    canvas.toBlob(function(blob) {
+      if (!blob) { showToast('❌ Erro ao gerar.', '#FF3D3D'); return; }
+      const file = new File([blob], 'trocafig-album-2026.png', { type: 'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          text: 'Meu álbum Copa 2026! ' + ok + '/' + totalAlbum + ' (' + pct + '%)',
+          files: [file]
+        }).catch(() => { downloadTabela(blob); });
+      } else {
+        downloadTabela(blob);
+      }
+    }, 'image/png');
+  }, 100);
+}
+
+function downloadTabela(blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'trocafig-album-2026.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Tabela salva!');
+}
+
+window.gerarTabelaAlbum = gerarTabelaAlbum;
+
+window.compartilharRepetidas = compartilharRepetidas;
+window.compartilharFaltantes = compartilharFaltantes;
+window.confirmarZerarAlbum = confirmarZerarAlbum;
+window.fecharZerarAlbum = fecharZerarAlbum;
+window.validarZerar = validarZerar;
+window.executarZerarAlbum = executarZerarAlbum;
+
+// ============================================================
+// REDEFINIR SENHA
+// ============================================================
+function abrirRedefinirSenha() {
+  if (currentUser) {
+    document.getElementById('senha-email-info').textContent = '📧 ' + currentUser.email;
+    document.getElementById('senha-msg').style.display = 'none';
+  }
+  document.getElementById('modal-senha').classList.add('open');
+}
+
+function fecharRedefinirSenha() {
+  document.getElementById('modal-senha').classList.remove('open');
+}
+
+async function enviarRedefinicaoSenha() {
+  if (!currentUser) return;
+  try {
+    await auth.sendPasswordResetEmail(currentUser.email);
+    const msg = document.getElementById('senha-msg');
+    msg.textContent = '✅ E-mail enviado para ' + currentUser.email + '! Verifique sua caixa de entrada e também o spam.';
+    msg.style.display = 'block';
+    setTimeout(fecharRedefinirSenha, 4000);
+  } catch(e) {
+    showToast('❌ Erro ao enviar e-mail. Tente novamente.', '#FF3D3D');
+  }
+}
+
+window.abrirMenuPerfil = abrirMenuPerfil;
+window.fecharMenuPerfil = fecharMenuPerfil;
+window.abrirRedefinirSenha = abrirRedefinirSenha;
+window.fecharRedefinirSenha = fecharRedefinirSenha;
+window.enviarRedefinicaoSenha = enviarRedefinicaoSenha;
+
+// ============================================================
+// TUTORIAL ONBOARDING
+// ============================================================
+function tutorialNext(currentStep) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  document.getElementById('dot-' + currentStep).classList.remove('active');
+  const next = currentStep + 1;
+  document.getElementById('step-' + next).classList.add('active');
+  document.getElementById('dot-' + next).classList.add('active');
+}
+
+function tutorialFinalizar() {
+  document.getElementById('tutorial-overlay').classList.remove('active');
+  localStorage.setItem('trocafig_tutorial_visto', '1');
+}
+
+function tutorialPular() {
+  if (confirm('Pular o tutorial? Você pode vê-lo novamente tocando nas suas iniciais no topo.')) {
+    tutorialFinalizar();
+  }
+}
+
+function abrirTutorial() {
+  // Resetar para o passo 1 (pula o disclaimer)
+  document.querySelectorAll('.tutorial-step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tutorial-dot').forEach(d => d.classList.remove('active'));
+  document.getElementById('step-1').classList.add('active');
+  document.getElementById('dot-1').classList.add('active');
+  document.getElementById('tutorial-overlay').classList.add('active');
+}
+
+function mostrarTutorialSeNecessario() {
+  const visto = localStorage.getItem('trocafig_tutorial_visto');
+  if (!visto) {
+    // Mostrar desde o passo 0 (com disclaimer) na primeira vez
+    document.querySelectorAll('.tutorial-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tutorial-dot').forEach(d => d.classList.remove('active'));
+    document.getElementById('step-0').classList.add('active');
+    document.getElementById('dot-0').classList.add('active');
+    document.getElementById('tutorial-overlay').classList.add('active');
+  }
+}
+
+window.tutorialNext = tutorialNext;
+window.tutorialFinalizar = tutorialFinalizar;
+window.tutorialPular = tutorialPular;
+window.abrirTutorial = abrirTutorial;
+
+// ============================================================
+// COMUNIDADES
+// ============================================================
+let comunidadeTabAtual = 'minhas';
+let comunidadeSelecionadaId = null;
+let minhasComunidades = []; // cache
+
+async function switchComunidadeTab(tab) {
+  comunidadeTabAtual = tab;
+  document.getElementById('tab-minhas-com').classList.toggle('active', tab === 'minhas');
+  document.getElementById('tab-buscar-com').classList.toggle('active', tab === 'buscar');
+  document.getElementById('tab-admin-com').classList.toggle('active', tab === 'admin');
+  document.getElementById('com-minhas').style.display = tab === 'minhas' ? 'block' : 'none';
+  document.getElementById('com-buscar').style.display = tab === 'buscar' ? 'block' : 'none';
+  document.getElementById('com-admin').style.display = tab === 'admin' ? 'block' : 'none';
+
+  if (tab === 'minhas') await renderMinhasComunidades();
+  if (tab === 'buscar') await buscarComunidades('');
+  if (tab === 'admin') await renderAdminComunidades();
+}
+
+// Renderiza comunidades do usuário
+async function renderMinhasComunidades() {
+  const list = document.getElementById('minhas-com-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>';
+  try {
+    const snap = await db.collection('comunidades')
+      .where('membros', 'array-contains', currentUser.uid)
+      .get();
+    minhasComunidades = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (snap.empty) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🏘️</div><div class="empty-title">Sem comunidades</div><div class="empty-sub">Crie uma comunidade ou busque uma para participar!</div></div>`;
+      return;
+    }
+    list.innerHTML = snap.docs.map(d => {
+      const c = d.data();
+      const isAdmin = c.adminUid === currentUser.uid;
+      return `<div class="fig-card" style="margin-bottom:8px;flex-direction:column;align-items:flex-start;gap:6px;">
+        <div style="display:flex;width:100%;align-items:center;gap:10px;">
+          <div style="font-size:28px;">${tipoIcon(c.tipo)}</div>
+          <div style="flex:1;">
+            <div class="fig-name">${c.nome}</div>
+            <div class="fig-selecao">${c.cidade} · ${c.estado} ${isAdmin ? '· <span style="color:var(--green);font-weight:700;">👑 Admin</span>' : ''}</div>
+          </div>
+          <div class="fig-badge badge-ok">${c.membros ? c.membros.length : 1} membro${c.membros && c.membros.length !== 1 ? 's' : ''}</div>
+        </div>
+        ${c.descricao ? `<div style="font-size:12px;color:var(--muted);padding-left:38px;">${c.descricao}</div>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erro ao carregar</div></div>';
+  }
+}
+
+// Buscar comunidades
+async function buscarComunidades(q) {
+  const list = document.getElementById('buscar-com-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Buscando...</div>';
+  try {
+    const snap = await db.collection('comunidades').orderBy('nome').limit(50).get();
+    const term = (q || '').toLowerCase();
+    let docs = snap.docs.filter(d => {
+      const c = d.data();
+      return !term || c.nome.toLowerCase().includes(term) || c.cidade.toLowerCase().includes(term);
+    });
+
+    if (docs.length === 0) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhuma comunidade</div><div class="empty-sub">Tente outro nome ou crie a sua!</div></div>`;
+      return;
+    }
+
+    list.innerHTML = docs.map(d => {
+      const c = d.data();
+      const jaSou = c.membros && c.membros.includes(currentUser.uid);
+      const pendente = c.pendentes && c.pendentes.includes(currentUser.uid);
+      const badge = jaSou
+        ? `<div class="fig-badge badge-ok">✅ Membro</div>`
+        : pendente
+        ? `<div class="fig-badge" style="background:rgba(255,140,0,0.12);color:#FF8C00;border:1px solid rgba(255,140,0,0.3);">⏳ Pendente</div>`
+        : `<div class="fig-badge badge-repetida" style="cursor:pointer;" onclick="verComunidade('${d.id}')">📩 Entrar</div>`;
+
+      return `<div class="fig-card" style="margin-bottom:8px;" onclick="verComunidade('${d.id}')">
+        <div style="font-size:26px;">${tipoIcon(c.tipo)}</div>
+        <div class="fig-info">
+          <div class="fig-name">${c.nome}</div>
+          <div class="fig-selecao">${c.cidade} · ${c.estado} · ${c.membros ? c.membros.length : 1} membro(s)</div>
+          ${c.descricao ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${c.descricao}</div>` : ''}
+        </div>
+        ${badge}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erro ao buscar</div></div>';
+  }
+}
+
+// Ver comunidade e solicitar entrada
+let comunidadeAtualId = null;
+async function verComunidade(id) {
+  comunidadeAtualId = id;
+  const doc = await db.collection('comunidades').doc(id).get();
+  const c = doc.data();
+  const jaSou = c.membros && c.membros.includes(currentUser.uid);
+  const pendente = c.pendentes && c.pendentes.includes(currentUser.uid);
+
+  document.getElementById('ver-com-content').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:48px;margin-bottom:8px;">${tipoIcon(c.tipo)}</div>
+      <div class="modal-title" style="text-align:center;">${c.nome}</div>
+      <div style="font-size:13px;color:var(--muted);">${c.cidade} · ${c.estado}</div>
+      ${c.descricao ? `<div style="font-size:13px;color:var(--text);margin-top:8px;">${c.descricao}</div>` : ''}
+    </div>
+    <div class="tutorial-demo">
+      <div class="tutorial-demo-row">
+        <div class="tutorial-demo-icon">👥</div>
+        <div class="tutorial-demo-info">
+          <div class="tutorial-demo-label">${c.membros ? c.membros.length : 1} membro(s)</div>
+          <div class="tutorial-demo-sub">Aprovados pelo administrador</div>
+        </div>
+      </div>
+      <div class="tutorial-demo-row">
+        <div class="tutorial-demo-icon">🏷️</div>
+        <div class="tutorial-demo-info">
+          <div class="tutorial-demo-label">${tipoLabel(c.tipo)}</div>
+          <div class="tutorial-demo-sub">Tipo de comunidade</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const btn = document.getElementById('btn-solicitar-com');
+  if (jaSou) {
+    btn.textContent = '✅ Você já é membro';
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+  } else if (pendente) {
+    btn.textContent = '⏳ Solicitação pendente';
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+  } else {
+    btn.textContent = '📩 Solicitar Entrada';
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+  document.getElementById('modal-ver-com').classList.add('open');
+}
+
+async function solicitarEntrada() {
+  if (!comunidadeAtualId) return;
+  try {
+    await db.collection('comunidades').doc(comunidadeAtualId).update({
+      pendentes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+    });
+    // Notificar admin via subcoleção
+    await db.collection('comunidades').doc(comunidadeAtualId)
+      .collection('solicitacoes').doc(currentUser.uid).set({
+        uid: currentUser.uid,
+        nome: currentUser.nome,
+        email: currentUser.email,
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+        status: 'pendente'
+      });
+    fecharVerComunidade();
+    showToast('📩 Solicitação enviada! Aguarde aprovação.');
+    await buscarComunidades(document.getElementById('buscar-com-input').value);
+  } catch(e) {
+    showToast('❌ Erro ao solicitar. Tente novamente.', '#FF3D3D');
+  }
+}
+
+function fecharVerComunidade() {
+  document.getElementById('modal-ver-com').classList.remove('open');
+}
+
+// Painel do admin
+async function renderAdminComunidades() {
+  const list = document.getElementById('admin-com-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>';
+  try {
+    const snap = await db.collection('comunidades').where('adminUid', '==', currentUser.uid).get();
+    if (snap.empty) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">👑</div><div class="empty-title">Sem comunidades</div><div class="empty-sub">Você não é administrador de nenhuma comunidade ainda.</div></div>`;
+      return;
+    }
+
+    let html = '';
+    for (const d of snap.docs) {
+      const c = d.data();
+      const pendentes = c.pendentes || [];
+      html += `<div style="background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius);padding:14px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="font-size:24px;">${tipoIcon(c.tipo)}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--white);">${c.nome}</div>
+            <div style="font-size:11px;color:var(--muted);">${c.cidade} · ${c.estado} · ${(c.membros||[]).length} membro(s)</div>
+          </div>
+        </div>`;
+
+      if (pendentes.length > 0) {
+        html += `<div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">⏳ ${pendentes.length} solicitação(ões) pendente(s):</div>`;
+        for (const uid of pendentes) {
+          const solDoc = await db.collection('comunidades').doc(d.id).collection('solicitacoes').doc(uid).get();
+          const sol = solDoc.exists ? solDoc.data() : { nome: uid, email: '' };
+          html += `<div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:8px;padding:10px;margin-bottom:6px;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--white);">${sol.nome || uid}</div>
+              <div style="font-size:11px;color:var(--muted);">${sol.email || ''}</div>
+            </div>
+            <button onclick="aprovarMembro('${d.id}','${uid}')" style="background:var(--green);border:none;border-radius:6px;color:#000;font-size:12px;font-weight:800;padding:6px 10px;cursor:pointer;">✅ Aprovar</button>
+            <button onclick="recusarMembro('${d.id}','${uid}')" style="background:rgba(255,61,61,0.15);border:1px solid rgba(255,61,61,0.3);border-radius:6px;color:var(--red);font-size:12px;font-weight:800;padding:6px 10px;cursor:pointer;">❌</button>
+          </div>`;
+        }
+      } else {
+        html += `<div style="font-size:12px;color:var(--muted);">✅ Nenhuma solicitação pendente</div>`;
+      }
+      html += '</div>';
+    }
+    list.innerHTML = html;
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erro ao carregar</div></div>';
+  }
+}
+
+async function aprovarMembro(comId, uid) {
+  try {
+    await db.collection('comunidades').doc(comId).update({
+      membros: firebase.firestore.FieldValue.arrayUnion(uid),
+      pendentes: firebase.firestore.FieldValue.arrayRemove(uid)
+    });
+    await db.collection('comunidades').doc(comId).collection('solicitacoes').doc(uid).update({ status: 'aprovado' });
+    showToast('✅ Membro aprovado!');
+    await renderAdminComunidades();
+  } catch(e) { showToast('❌ Erro ao aprovar.', '#FF3D3D'); }
+}
+
+async function recusarMembro(comId, uid) {
+  try {
+    await db.collection('comunidades').doc(comId).update({
+      pendentes: firebase.firestore.FieldValue.arrayRemove(uid)
+    });
+    await db.collection('comunidades').doc(comId).collection('solicitacoes').doc(uid).update({ status: 'recusado' });
+    showToast('❌ Solicitação recusada.');
+    await renderAdminComunidades();
+  } catch(e) { showToast('❌ Erro.', '#FF3D3D'); }
+}
+
+// Criar comunidade
+function abrirCriarComunidade() {
+  document.getElementById('modal-criar-com').classList.add('open');
+}
+
+function fecharCriarComunidade() {
+  document.getElementById('modal-criar-com').classList.remove('open');
+}
+
+async function criarComunidade() {
+  const nome = document.getElementById('com-nome').value.trim();
+  const tipo = document.getElementById('com-tipo').value;
+  const cidade = document.getElementById('com-cidade').value.trim();
+  const estado = document.getElementById('com-estado').value;
+  const desc = document.getElementById('com-desc').value.trim();
+
+  if (!nome || !cidade || !estado) { showToast('⚠️ Preencha nome, cidade e estado!', '#FF3D3D'); return; }
+
+  try {
+    await db.collection('comunidades').add({
+      nome, tipo, cidade, estado,
+      descricao: desc,
+      adminUid: currentUser.uid,
+      adminNome: currentUser.nome,
+      membros: [currentUser.uid],
+      pendentes: [],
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    fecharCriarComunidade();
+    showToast('🏘️ Comunidade criada com sucesso!');
+    document.getElementById('com-nome').value = '';
+    document.getElementById('com-cidade').value = '';
+    document.getElementById('com-desc').value = '';
+    await renderMinhasComunidades();
+  } catch(e) { showToast('❌ Erro ao criar. Tente novamente.', '#FF3D3D'); }
+}
+
+// Helpers
+function tipoIcon(tipo) {
+  const icons = { familia:'👨‍👩‍👧‍👦', condominio:'🏢', escola:'🏫', trabalho:'💼', amigos:'👥', clube:'⚽', outro:'🏷️' };
+  return icons[tipo] || '🏘️';
+}
+
+function tipoLabel(tipo) {
+  const labels = { familia:'Família', condominio:'Condomínio / Prédio', escola:'Escola / Colégio', trabalho:'Trabalho / Empresa', amigos:'Amigos', clube:'Clube / Associação', outro:'Outro' };
+  return labels[tipo] || 'Comunidade';
+}
+
+// Atualizar busca na Comunidade para filtrar por grupo
+async function renderComunidade(q) {
+  const list = document.getElementById('trocas-list');
+
+  // Verificar se usuário tem comunidades
+  const snapCom = await db.collection('comunidades').where('membros', 'array-contains', currentUser.uid).get();
+  if (snapCom.empty) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🏘️</div><div class="empty-title">Entre numa comunidade!</div><div class="empty-sub">Para ver trocas disponíveis, primeiro entre em uma comunidade na aba 🏘️ Grupos.<br><br>Assim você vê apenas figurinhas de pessoas próximas a você!</div></div>`;
+    return;
+  }
+
+  const membrosIds = new Set();
+  snapCom.docs.forEach(d => (d.data().membros || []).forEach(uid => membrosIds.add(uid)));
+  membrosIds.delete(currentUser.uid);
+
+  if (membrosIds.size === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">Comunidade vazia</div><div class="empty-sub">Você é o único membro. Convide mais pessoas para participar!</div></div>`;
+    return;
+  }
+
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">🔍 Buscando...</div>';
+  try {
+    const term = (q || '').toLowerCase();
+    let itens = [];
+
+    for (const uid of membrosIds) {
+      const snap = await db.collection('figurinhas').doc(uid).get();
+      if (!snap.exists) continue;
+      const lista = snap.data().lista || [];
+
+      let nomeUsuario = 'Usuário';
+      try {
+        const userDoc = await db.collection('users').doc(uid).get();
+        if (userDoc.exists) nomeUsuario = userDoc.data().nome || 'Usuário';
+      } catch(e) {}
+
+      const repetidas = lista.filter(f => f.status === 'repetida' && (!term || f.nome.toLowerCase().includes(term)));
+      for (const f of repetidas) {
+        const euPreciso = figurinhas.some(mf => mf.num === f.num && mf.status === 'faltante');
+        itens.push({ ...f, uid, nomeUsuario, euPreciso });
+      }
+    }
+
+    if (itens.length === 0) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhuma troca disponível</div><div class="empty-sub">Ninguém na sua comunidade tem figurinhas repetidas ainda${term ? ' com esse nome' : ''}.</div></div>`;
+      return;
+    }
+
+    itens.sort((a, b) => (b.euPreciso ? 1 : 0) - (a.euPreciso ? 1 : 0));
+
+    list.innerHTML = itens.map(f => {
+      const sel = SELECOES.find(s => s.id === f.selecao);
+      const destaque = f.euPreciso ? 'border-color:var(--green);box-shadow:0 0 0 1px var(--green);' : '';
+      const badge = f.euPreciso
+        ? '<div class="fig-badge badge-ok">✅ Você precisa!</div>'
+        : '<div class="fig-badge badge-repetida">🔵 Disponível</div>';
+      return `
+        <div class="fig-card" style="${destaque}" onclick="iniciarTrocaCom('${f.uid}','${f.nomeUsuario.replace(/'/g,'')}','${f.nome.replace(/'/g,'')}','${f.num}')">
+          <div class="fig-num" style="font-size:14px;">${f.num}</div>
+          <div class="fig-thumb" style="overflow:hidden;">${figThumb(f.nome, 'repetida')}</div>
+          <div class="fig-info">
+            <div class="fig-name">${f.nome}</div>
+            <div class="fig-selecao">${sel ? sel.flag + ' ' + sel.nome : f.selecao} · <b>${f.nomeUsuario}</b></div>
+          </div>
+          ${badge}
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erro ao carregar</div></div>`;
+  }
+}
+
+window.switchComunidadeTab = switchComunidadeTab;
+window.buscarComunidades = buscarComunidades;
+window.verComunidade = verComunidade;
+window.solicitarEntrada = solicitarEntrada;
+window.fecharVerComunidade = fecharVerComunidade;
+window.abrirCriarComunidade = abrirCriarComunidade;
+window.fecharCriarComunidade = fecharCriarComunidade;
+window.criarComunidade = criarComunidade;
+window.aprovarMembro = aprovarMembro;
+window.recusarMembro = recusarMembro;
+
+// ============================================================
+// TABS / NAV
+// ============================================================
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + tab).classList.add('active');
+  const navEl = document.getElementById('nav-' + tab);
+  if (navEl) navEl.classList.add('active');
+
+  if (tab === 'mensagens') renderChats();
+  if (tab === 'buscar') searchTrocas('');
+  if (tab === 'album') renderSelecoes();
+  if (tab === 'comunidades') switchComunidadeTab('minhas');
+}
+
+// ============================================================
+// ALBUM - SELECOES
+// ============================================================
+let currentConf = 'Todas';
+
+function renderSelecoes(filter) {
+  const grid = document.getElementById('selecao-grid');
+  const q = (filter || document.getElementById('search-selecao').value || '').toLowerCase();
+  let sel = SELECOES.filter(s => s.nome.toLowerCase().includes(q) || s.id.toLowerCase().includes(q));
+  if (currentConf !== 'Todas') {
+    if (currentConf.startsWith('grupo:')) {
+      const g = currentConf.split(':')[1];
+      sel = sel.filter(s => s.grupo === g);
+    } else {
+      sel = sel.filter(s => s.conf === currentConf);
+    }
+  }
+
+  grid.innerHTML = sel.map(s => {
+    const myfigs = figurinhas.filter(f => f.selecao === s.id);
+    const ok = myfigs.filter(f => f.status === 'tenho').length;
+    const rep = myfigs.filter(f => f.status === 'repetida').length;
+    const coladas = ok + rep;
+    const pct = Math.round((coladas / s.total) * 100);
+    const selected = currentSelecao === s.id;
+    return `
+      <div class="selecao-card ${selected ? 'selected' : ''}" onclick="openSelecao('${s.id}')">
+        <div class="selecao-flag">${s.flag}</div>
+        <div class="selecao-name">${s.nome}</div>
+        <div class="selecao-count">${coladas}/${s.total} coladas</div>
+        <div class="selecao-progress" style="margin-top:8px;">
+          <div class="selecao-progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterConf(conf, el) {
+  currentConf = conf;
+  document.querySelectorAll('#conf-chips .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderSelecoes();
+}
+
+function filterSelecoes() {
+  renderSelecoes(document.getElementById('search-selecao').value);
+}
+
+function openSelecao(id) {
+  selecaoFigScreen = id;
+  const sel = SELECOES.find(s => s.id === id);
+  document.getElementById('selecao-title').textContent = sel.flag + ' ' + sel.nome;
+  renderFigs(id, 'todas');
+  // Resetar chips
+  document.querySelectorAll('#figs-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#figs-chips .chip').classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-figs').classList.add('active');
+}
+
+function openSelecaoFiltro(id, filtro) {
+  selecaoFigScreen = id;
+  const sel = SELECOES.find(s => s.id === id);
+  document.getElementById('selecao-title').textContent = sel.flag + ' ' + sel.nome;
+  renderFigs(id, filtro);
+  // Ativar chip correto
+  document.querySelectorAll('#figs-chips .chip').forEach(c => c.classList.remove('active'));
+  const chipMap = { todas:0, tenho:1, repetida:2, faltante:3 };
+  const chips = document.querySelectorAll('#figs-chips .chip');
+  if (chips[chipMap[filtro]]) chips[chipMap[filtro]].classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-figs').classList.add('active');
+}
+
+window.openSelecaoFiltro = openSelecaoFiltro;
+
+function backToAlbum() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-album').classList.add('active');
+  renderSelecoes();
+}
+
+// ============================================================
+// FIGURINHAS DA SELECAO
+// ============================================================
+// FOTOS — via API do Wikimedia (busca por nome do jogador)
+// Fallback: avatar colorido com iniciais
+// ============================================================
+const FOTOS_CACHE = {};
+
+// Fotos pré-mapeadas e verificadas para os maiores jogadores
+const FOTOS = {
+  'Lionel Messi':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg/120px-Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg',
+  'Cristiano Ronaldo':  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/120px-Cristiano_Ronaldo_2018.jpg',
+  'Kylian Mbappé':      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/2019-07-17_SB_zum_Abschlusstraining_%C3%96sterreich_vs._Frankreich_1020_%28cropped%2C_2%29.jpg/120px-2019-07-17_SB_zum_Abschlusstraining_%C3%96sterreich_vs._Frankreich_1020_%28cropped%2C_2%29.jpg',
+  'Erling Haaland':     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Erling_Haaland_2023.jpg/120px-Erling_Haaland_2023.jpg',
+  'Mohamed Salah':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mohamed_Salah_2018.jpg/120px-Mohamed_Salah_2018.jpg',
+  'Vinícius Júnior':    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Vinicius_Jr_crop.jpg/120px-Vinicius_Jr_crop.jpg',
+  'Kevin De Bruyne':    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Kevin_De_Bruyne_2018_%28cropped%29.jpg/120px-Kevin_De_Bruyne_2018_%28cropped%29.jpg',
+  'Neymar Jr':          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Bra-Cos_Rica_%281%29_%28cropped%29.jpg/120px-Bra-Cos_Rica_%281%29_%28cropped%29.jpg',
+  'Harry Kane':         'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Harry_Kane_2017.jpg/120px-Harry_Kane_2017.jpg',
+  'Lamine Yamal':       'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Lamine_Yamal_EURO_2024_%28cropped%29.jpg/120px-Lamine_Yamal_EURO_2024_%28cropped%29.jpg',
+  'Jude Bellingham':    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Jude_Bellingham_2022_%28cropped%29.jpg/120px-Jude_Bellingham_2022_%28cropped%29.jpg',
+  'Bukayo Saka':        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Bukayo_Saka_2022_%28cropped%29.jpg/120px-Bukayo_Saka_2022_%28cropped%29.jpg',
+  'Phil Foden':         'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Phil_Foden_2022_%28cropped%29.jpg/120px-Phil_Foden_2022_%28cropped%29.jpg',
+  'Pedri':              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Pedri_Gonz%C3%A1lez_%28cropped%29.jpg/120px-Pedri_Gonz%C3%A1lez_%28cropped%29.jpg',
+  'Rodri':              'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Rodri_2022_%28cropped%29.jpg/120px-Rodri_2022_%28cropped%29.jpg',
+  'Florian Wirtz':      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Florian_Wirtz_2023_%28cropped%29.jpg/120px-Florian_Wirtz_2023_%28cropped%29.jpg',
+  'Jamal Musiala':      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Jamal_Musiala_2022_%28cropped%29.jpg/120px-Jamal_Musiala_2022_%28cropped%29.jpg',
+  'Raphinha':           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Raphinha_2022_%28cropped%29.jpg/120px-Raphinha_2022_%28cropped%29.jpg',
+  'Virgil van Dijk':    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Virgil_van_Dijk_2018_%28cropped%29.jpg/120px-Virgil_van_Dijk_2018_%28cropped%29.jpg',
+  'Martin Ødegaard':    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Martin_%C3%98degaard_2022_%28cropped%29.jpg/120px-Martin_%C3%98degaard_2022_%28cropped%29.jpg',
+  'Sadio Mané':         'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Sadio_Man%C3%A9_2022_%28cropped%29.jpg/120px-Sadio_Man%C3%A9_2022_%28cropped%29.jpg',
+  'Achraf Hakimi':      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Achraf_Hakimi_2022_%28cropped%29.jpg/120px-Achraf_Hakimi_2022_%28cropped%29.jpg',
+  'Alphonso Davies':    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Alphonso_Davies_2022_%28cropped%29.jpg/120px-Alphonso_Davies_2022_%28cropped%29.jpg',
+  'Christian Pulisic':  'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Christian_Pulisic_2019_%28cropped%29.jpg/120px-Christian_Pulisic_2019_%28cropped%29.jpg',
+  'Moisés Caicedo':     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Mois%C3%A9s_Caicedo_2022_%28cropped%29.jpg/120px-Mois%C3%A9s_Caicedo_2022_%28cropped%29.jpg',
+  'Darwin Núñez':       'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Darwin_N%C3%BA%C3%B1ez_2022_%28cropped%29.jpg/120px-Darwin_N%C3%BA%C3%B1ez_2022_%28cropped%29.jpg',
+  'Luis Díaz':          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Luis_D%C3%ADaz_2022_%28cropped%29.jpg/120px-Luis_D%C3%ADaz_2022_%28cropped%29.jpg',
+  'Heung-min Son':      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Son_Heung-min_2019_%28cropped%29.jpg/120px-Son_Heung-min_2019_%28cropped%29.jpg',
+  'Takefusa Kubo':      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kubo_Take_20200818.jpg/120px-Kubo_Take_20200818.jpg',
+};
+
+// Gerar cor consistente a partir do nome
+function strToColor(str) {
+  const colors = ['#00C853','#2979FF','#FF6D00','#D500F9','#00BCD4','#FF3D3D','#FFD600','#00897B','#E91E63','#3F51B5'];
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
+  return colors[Math.abs(h) % colors.length];
+}
+
+function avatarHtml(initials, color) {
+  return `<div style="width:100%;height:100%;background:${color}22;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:${color};">${initials}</div>`;
+}
+
+function getInitials(nome) {
+  return nome.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+// Retorna HTML do thumb da figurinha
+function figThumb(nome, status) {
+  const foto = FOTOS[nome];
+  const initials = getInitials(nome);
+  const color = strToColor(nome);
+  const fallback = avatarHtml(initials, color).replace(/"/g, '&quot;');
+  if (foto) {
+    return `<img src="${foto}" alt="${initials}"
+      style="width:100%;height:100%;object-fit:cover;border-radius:7px;"
+      onerror="this.outerHTML='${fallback}'">`;
+  }
+  return avatarHtml(initials, color);
+}
+
+// ============================================================
+// FIGURINHAS DA SELECAO
+// ============================================================
+function renderFigs(selId, filter) {
+  currentFilter = filter;
+  const sel = SELECOES.find(s => s.id === selId);
+  const jogadores = JOGADORES[selId] || [];
+  const list = document.getElementById('fig-list');
+
+  const allFigs = jogadores.map((nome, i) => {
+    const num = selId + '-' + (i + 1);
+    const minha = figurinhas.find(f => f.num === num);
+    return { num, nome, status: minha ? minha.status : 'faltante', qtd: minha ? (minha.qtd || 1) : 0, selId };
+  });
+
+  const filtered = filter === 'todas' ? allFigs : allFigs.filter(f => f.status === filter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhuma figurinha</div><div class="empty-sub">Nenhuma figurinha neste filtro.</div></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(f => {
+    const badgeClass = f.status === 'repetida' ? 'badge-repetida' : f.status === 'faltante' ? 'badge-faltante' : 'badge-ok';
+    const sel = SELECOES.find(s => s.id === f.selId);
+    const overlay = (f.status === 'faltante') ? 'filter:grayscale(80%)opacity(0.5);' : '';
+    const nomeSeguro = f.nome.replace(/'/g,'').replace(/"/g,'');
+
+    // Badge e controles de quantidade para repetidas
+    let badgeHtml = '';
+    if (f.status === 'repetida') {
+      badgeHtml = `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div class="fig-badge badge-repetida" style="white-space:nowrap;">🔵 ${f.qtd}x rep.</div>
+          <div style="display:flex;gap:4px;">
+            <button onclick="event.stopPropagation();alterarQtd('${f.num}','${nomeSeguro}','${f.selId}',-1)" style="width:26px;height:26px;background:rgba(255,61,61,0.15);border:1px solid rgba(255,61,61,0.3);border-radius:6px;color:var(--red);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+            <button onclick="event.stopPropagation();alterarQtd('${f.num}','${nomeSeguro}','${f.selId}',1)" style="width:26px;height:26px;background:rgba(0,200,83,0.15);border:1px solid rgba(0,200,83,0.3);border-radius:6px;color:var(--green);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+          </div>
+        </div>`;
+
+    } else if (f.status === 'faltante') {
+      badgeHtml = `<div class="fig-badge badge-faltante">🔴 Faltante</div>`;
+    } else {
+      badgeHtml = `<div class="fig-badge badge-ok">✅ Tenho</div>`;
+    }
+
+    return `
+      <div class="fig-card" onclick="cycleFig('${f.num}','${nomeSeguro}','${f.selId}')">
+        <div class="fig-num">${f.num.split('-')[1]}</div>
+        <div class="fig-thumb" style="overflow:hidden;${overlay}">${figThumb(f.nome, f.status)}</div>
+        <div class="fig-info">
+          <div class="fig-name">${f.nome}</div>
+          <div class="fig-selecao">${sel ? sel.flag + ' ' + sel.nome : f.selId}</div>
+        </div>
+        ${badgeHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+async function alterarQtd(num, nome, selId, delta) {
+  const idx = figurinhas.findIndex(f => f.num === num);
+  if (idx === -1) return;
+  const f = figurinhas[idx];
+  if (f.status !== 'repetida') return;
+  const novaQtd = (f.qtd || 1) + delta;
+  if (novaQtd <= 0) {
+    // Volta para "tenho" (1 cópia no álbum)
+    figurinhas[idx].status = 'tenho';
+    figurinhas[idx].qtd = 1;
+    showToast('✅ ' + nome + ' — voltou para Tenho');
+  } else {
+    figurinhas[idx].qtd = novaQtd;
+    showToast('🔵 ' + nome + ' — ' + novaQtd + 'x repetida', '#2979FF');
+  }
+  await save();
+  updateStats();
+  renderFigs(selId, currentFilter);
+  renderSelecoes();
+}
+
+async function cycleFig(num, nome, selId) {
+  const idx = figurinhas.findIndex(f => f.num === num);
+  if (idx === -1) {
+    figurinhas.push({ num, nome, selecao: selId, status: 'tenho', qtd: 1 });
+    showToast('✅ ' + nome + ' — Colada!');
+  } else {
+    const cur = figurinhas[idx].status;
+    if (cur === 'tenho') {
+      figurinhas[idx].status = 'repetida';
+      figurinhas[idx].qtd = 1; // 1 cópia repetida para trocar
+      showToast('🔵 ' + nome + ' — Repetida (1x)', '#2979FF');
+    } else if (cur === 'repetida') {
+      figurinhas[idx].status = 'faltante';
+      figurinhas[idx].qtd = 0;
+      showToast('🔴 ' + nome + ' — Faltante', '#FF3D3D');
+    } else if (cur === 'faltante') {
+      figurinhas[idx].status = 'tenho';
+      figurinhas[idx].qtd = 1;
+      showToast('✅ ' + nome + ' — Tenho!');
+    }
+  }
+  await save();
+  updateStats();
+  renderFigs(selId, currentFilter);
+  renderSelecoes();
+}
+
+window.alterarQtd = alterarQtd;
+
+function filterFigs(f, el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderFigs(selecaoFigScreen, f);
+}
+
+// ============================================================
+// BUSCAR TROCAS
+// ============================================================
+let buscarTab = 'comunidade';
+let todasFigurinhasUsuarios = []; // cache da comunidade
+
+function switchBuscarTab(tab) {
+  buscarTab = tab;
+  document.getElementById('tab-comunidade').classList.toggle('active', tab === 'comunidade');
+  document.getElementById('tab-minhas').classList.toggle('active', tab === 'minhas');
+  document.getElementById('buscar-input').value = '';
+  searchTrocas('');
+}
+
+async function searchTrocas(q) {
+  if (buscarTab === 'minhas') {
+    renderMinhasTrocas(q);
+  } else {
+    await renderComunidade(q);
+  }
+}
+
+// Mostra figurinhas repetidas de TODOS os usuários (exceto o próprio)
+async function renderComunidade(q) {
+  const list = document.getElementById('trocas-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">🔍 Buscando...</div>';
+
+  try {
+    const snap = await db.collection('figurinhas').get();
+    const term = (q || '').toLowerCase();
+    let itens = [];
+
+    for (const doc of snap.docs) {
+      if (doc.id === currentUser.uid) continue; // pula o próprio usuário
+      const data = doc.data();
+      const lista = data.lista || [];
+      const uid = doc.id;
+
+      // Buscar nome do usuário
+      let nomeUsuario = 'Usuário';
+      try {
+        const userDoc = await db.collection('users').doc(uid).get();
+        if (userDoc.exists) nomeUsuario = userDoc.data().nome || 'Usuário';
+      } catch(e) {}
+
+      // Figurinhas repetidas desse usuário (exclui trocadas)
+      const repetidas = lista.filter(f =>
+        f.status === 'repetida' &&
+        (!term || f.nome.toLowerCase().includes(term))
+      );
+
+      for (const f of repetidas) {
+        // Verificar se eu preciso dessa figurinha (tenho como faltante)
+        const euPreciso = figurinhas.some(mf => mf.num === f.num && mf.status === 'faltante');
+        itens.push({ ...f, uid, nomeUsuario, euPreciso });
+      }
+    }
+
+    if (itens.length === 0) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhuma troca disponível</div><div class="empty-sub">Ninguém tem figurinhas repetidas ainda${term ? ' com esse nome' : ''}.<br>Convide mais amigos!</div></div>`;
+      return;
+    }
+
+    // Ordenar: primeiro as que eu preciso
+    itens.sort((a, b) => (b.euPreciso ? 1 : 0) - (a.euPreciso ? 1 : 0));
+
+    list.innerHTML = itens.map(f => {
+      const sel = SELECOES.find(s => s.id === f.selecao);
+      const destaque = f.euPreciso ? 'border-color:var(--green);box-shadow:0 0 0 1px var(--green);' : '';
+      const badge = f.euPreciso
+        ? '<div class="fig-badge badge-ok">✅ Você precisa!</div>'
+        : '<div class="fig-badge badge-repetida">🔵 Disponível</div>';
+      return `
+        <div class="fig-card" style="${destaque}" onclick="iniciarTrocaCom('${f.uid}','${f.nomeUsuario.replace(/'/g,'')}','${f.nome.replace(/'/g,'')}','${f.num}')">
+          <div class="fig-num" style="font-size:14px;">${f.num}</div>
+          <div class="fig-thumb" style="overflow:hidden;">${figThumb(f.nome, 'repetida')}</div>
+          <div class="fig-info">
+            <div class="fig-name">${f.nome}</div>
+            <div class="fig-selecao">${sel ? sel.flag + ' ' + sel.nome : f.selecao} · <b>${f.nomeUsuario}</b></div>
+          </div>
+          ${badge}
+        </div>
+      `;
+    }).join('');
+
+  } catch(e) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erro ao carregar</div><div class="empty-sub">Tente novamente em instantes.</div></div>`;
+  }
+}
+
+// Mostra as figurinhas do próprio usuário
+function renderMinhasTrocas(q) {
+  const list = document.getElementById('trocas-list');
+  const term = (q || '').toLowerCase();
+  const repetidas = figurinhas.filter(f => f.status === 'repetida' && (!term || f.nome.toLowerCase().includes(term)));
+  const faltantes = figurinhas.filter(f => f.status === 'faltante' && (!term || f.nome.toLowerCase().includes(term)));
+
+  if (repetidas.length === 0 && faltantes.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Sua lista está vazia</div><div class="empty-sub">Abra o Álbum, toque nas figurinhas para marcar quais você tem, quais são repetidas e quais estão faltando.</div></div>`;
+    return;
+  }
+
+  let html = '';
+  if (repetidas.length > 0) {
+    html += `<div class="section-title" style="margin-bottom:8px;">🔵 Minhas Repetidas (ofereço)</div>`;
+    html += repetidas.map(f => {
+      const sel = SELECOES.find(s => s.id === f.selecao);
+      return `<div class="fig-card" style="margin-bottom:8px;">
+        <div class="fig-num" style="font-size:14px;">${f.num}</div>
+        <div class="fig-thumb" style="overflow:hidden;">${figThumb(f.nome, 'repetida')}</div>
+        <div class="fig-info">
+          <div class="fig-name">${f.nome}</div>
+          <div class="fig-selecao">${sel ? sel.flag + ' ' + sel.nome : f.selecao}</div>
+        </div>
+        <div class="fig-badge badge-repetida">Ofereço</div>
+      </div>`;
+    }).join('');
+  }
+  if (faltantes.length > 0) {
+    html += `<div class="section-title" style="margin-bottom:8px;margin-top:14px;">🔴 Minhas Faltantes (procuro)</div>`;
+    html += faltantes.map(f => {
+      const sel = SELECOES.find(s => s.id === f.selecao);
+      return `<div class="fig-card" style="margin-bottom:8px;">
+        <div class="fig-num" style="font-size:14px;">${f.num}</div>
+        <div class="fig-thumb" style="overflow:hidden;">${figThumb(f.nome, 'faltante')}</div>
+        <div class="fig-info">
+          <div class="fig-name">${f.nome}</div>
+          <div class="fig-selecao">${sel ? sel.flag + ' ' + sel.nome : f.selecao}</div>
+        </div>
+        <div class="fig-badge badge-faltante">Procuro</div>
+      </div>`;
+    }).join('');
+  }
+  list.innerHTML = html;
+}
+
+// Inicia ou abre conversa com outro usuário
+async function iniciarTrocaCom(outroUid, outroNome, nomeFig, numFig) {
+  const ids = [currentUser.uid, outroUid].sort();
+  const chatId = ids[0] + '_' + ids[1] + '_' + (numFig || '').replace('-','');
+
+  await db.collection('chats').doc(chatId).set({
+    participantes: [currentUser.uid, outroUid],
+    nomes: { [currentUser.uid]: currentUser.nome, [outroUid]: outroNome },
+    figurinha: nomeFig,
+    numFig: numFig || '',
+    ultimaMensagem: '',
+    atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true });
+
+  const msgs = await db.collection('chats').doc(chatId).collection('mensagens').limit(1).get();
+  if (msgs.empty) {
+    const txtInicial = 'Oi ' + outroNome + '! Vi que você tem ' + nomeFig + ' (' + numFig + ') repetida. Topo trocar! Você precisa de alguma que eu tenho? 🤝';
+    await db.collection('chats').doc(chatId).collection('mensagens').add({
+      texto: txtInicial,
+      autorId: currentUser.uid,
+      autorNome: currentUser.nome,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await db.collection('chats').doc(chatId).update({
+      ultimaMensagem: txtInicial,
+      atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  const titulo = outroNome + ' · ' + nomeFig;
+  document.getElementById('chat-partner-name').textContent = titulo;
+  currentChat = chatId;
+  document.getElementById('chat-window').classList.add('open');
+  ouvirMensagens(chatId);
+  switchTab('mensagens');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal() {
+  const sel = document.getElementById('modal-selecao');
+  sel.innerHTML = SELECOES.map(s => `<option value="${s.id}">${s.flag} ${s.nome}</option>`).join('');
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+async function addFigurinhaFromModal() {
+  const selecao = document.getElementById('modal-selecao').value;
+  const num = document.getElementById('modal-num').value.trim();
+  const nome = document.getElementById('modal-nome').value.trim();
+  const status = document.getElementById('modal-status').value;
+  if (!num || !nome) { showToast('⚠️ Preencha todos os campos!', '#FF3D3D'); return; }
+  const fullNum = num.includes('-') ? num : selecao + '-' + num;
+  const idx = figurinhas.findIndex(f => f.num === fullNum);
+  if (idx !== -1) { figurinhas[idx].status = status; figurinhas[idx].nome = nome; }
+  else { figurinhas.push({ num: fullNum, nome, selecao, status }); }
+  await save();
+  updateStats();
+  renderSelecoes();
+  closeModalDirect();
+  showToast('✅ Figurinha salva!');
+  document.getElementById('modal-num').value = '';
+  document.getElementById('modal-nome').value = '';
+}
+
+let currentSelecao = null;
+let currentFilter = 'todas';
+let currentChat = null;
+let activeTab = 'album';
+let selecaoFigScreen = null;
+
+// ============================================================
+// INIT — Firebase cuida do estado via onAuthStateChanged
+// ============================================================
+document.getElementById('login-screen').classList.add('active');
+
+// Expor funções para o HTML (necessário com type="module")
+// Esqueci minha senha (tela de login)
+async function esqueciSenha() {
+  const email = document.getElementById('login-user').value.trim();
+  if (!email) {
+    showLoginError('Digite seu e-mail acima para receber o link de redefinição.');
+    return;
+  }
+  try {
+    showLoginError('Enviando...');
+    await auth.sendPasswordResetEmail(email);
+    showLoginError('');
+    showToast('📧 E-mail enviado! Verifique sua caixa de entrada e spam.');
+  } catch(e) {
+    const msgs = { 'auth/user-not-found':'E-mail não encontrado.', 'auth/invalid-email':'E-mail inválido.' };
+    showLoginError(msgs[e.code] || 'Erro ao enviar. Verifique o e-mail digitado.');
+  }
+}
+
+window.esqueciSenha = esqueciSenha;
+window.switchLoginTab = switchLoginTab;
+window.doLogin = doLogin;
+window.doCadastro = doCadastro;
+window.doLogout = doLogout;
+window.switchBuscarTab = switchBuscarTab;
+window.iniciarTrocaCom = iniciarTrocaCom;
+window.abrirChatExistente = abrirChatExistente;
+window.switchTab = switchTab;
+window.filterConf = filterConf;
+window.filterSelecoes = filterSelecoes;
+window.openSelecao = openSelecao;
+window.backToAlbum = backToAlbum;
+window.filterFigs = filterFigs;
+window.cycleFig = cycleFig;
+window.searchTrocas = searchTrocas;
+window.openChat = openChat;
+window.closeChat = closeChat;
+window.sendMsg = sendMsg;
+window.startChat = startChat;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalDirect = closeModalDirect;
+window.addFigurinhaFromModal = addFigurinhaFromModal;
+window.showToast = showToast;
+</script>
+</body>
+</html>
